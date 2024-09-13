@@ -1,4 +1,4 @@
-# Naughts And Crosses
+# Noughts And Crosses
 
 A test driven project to learn and display TDD.
 

@@ -1,0 +1,11 @@
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/bin/Debug/net8.0/NoughtsAndCrosses.Core.deps.json
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/bin/Debug/net8.0/NoughtsAndCrosses.Core.dll
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/bin/Debug/net8.0/NoughtsAndCrosses.Core.pdb
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/NoughtsAndCrosses.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/NoughtsAndCrosses.Core.AssemblyInfoInputs.cache
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/NoughtsAndCrosses.Core.AssemblyInfo.cs
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/NoughtsAndCrosses.Core.csproj.CoreCompileInputs.cache
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/NoughtsAndCrosses.Core.dll
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/refint/NoughtsAndCrosses.Core.dll
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/NoughtsAndCrosses.Core.pdb
+/Users/azhang/Repos/GitHub/NaughtsAndCrosses/src/NoughtsAndCrosses.Core/obj/Debug/net8.0/ref/NoughtsAndCrosses.Core.dll
