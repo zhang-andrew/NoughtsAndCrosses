@@ -1,6 +1,6 @@
 # TestList
 
-- [ ] The game starts with a 3x3 square grid, containing 9 available unoccupied spaces.
+- [x] The game starts with a 3x3 square grid, containing 9 available unoccupied spaces.
 - [ ] Players then take turns and place an "X" or an "O" in unoccupied spaces.
 - [ ] Each space in the grid can only be occupied by either an "X" or an "O".
 - [ ] An occupied space in the grid cannot be overwritten once occupied.
