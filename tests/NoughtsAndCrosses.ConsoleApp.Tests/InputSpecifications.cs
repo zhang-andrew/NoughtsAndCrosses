@@ -13,7 +13,7 @@ public class InputSpecifications
     [InlineData(Mark.X, "A2")]
     [InlineData(Mark.O, "b3")]
     [InlineData(Mark.O, "B3")]
-    public void Should_place_a_mark_if_valid_coordinate_input_is_given(Mark markType, string input)
+    public void Should_place_a_mark_if_coordinate_input_is_valid(Mark markType, string input)
     {
         // Arrange
         var gameManager = new GameManager();
@@ -25,6 +25,24 @@ public class InputSpecifications
         
         // Assert
         affectedSpace.Mark.Should().Be(player.Mark);
+    }
+    
+    [Theory]
+    [InlineData(Mark.X, "aa")]
+    [InlineData(Mark.X, "HelloWorld")]
+    [InlineData(Mark.X, "11")]
+    public void Should_throw_exception_if_coordinate_input_is_invalid(Mark markType, string input)
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        var player = new Player(markType);
+        
+        // Act
+        Action act = () => gameManager.ConsoleInput(player, input);
+        
+        // Assert
+        // act.Should().Throw<Exception>().WithMessage("Invalid coordinate");
 
+        act.Should().Throw<Exception>();
     }
 }

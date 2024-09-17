@@ -4,6 +4,7 @@ using NoughtsAndCrosses.Core.Enum;
 using System;
 using NoughtsAndCrosses.ConsoleApp;
 using NoughtsAndCrosses.ConsoleApp.Domain;
+using NoughtsAndCrosses.Core.Constant;
 
 namespace NoughtsAndCrosses.Core;
 
@@ -46,10 +47,10 @@ public class BoardSpecifications
     }
     
     [Theory]
-    [InlineData(FileLetter.A, RankNumber.One, Mark.X)]
-    [InlineData(FileLetter.C, RankNumber.Three, Mark.O)]
-    [InlineData(FileLetter.B, RankNumber.Two, Mark.O)]
-    public void Should_be_able_to_place_mark_on_space(FileLetter fileLetter, RankNumber rankNumber, Mark mark)
+    [InlineData(FileLetter.A, 1, Mark.X)]
+    [InlineData(FileLetter.C, 3, Mark.O)]
+    [InlineData(FileLetter.B, 2, Mark.O)]
+    public void Should_be_able_to_place_mark_on_space(string fileLetter, int rankNumber, Mark mark)
     {
         // Arrange
         var gameManager = new GameManager();
@@ -68,10 +69,10 @@ public class BoardSpecifications
         var gameManager = new GameManager();
         
         // Act
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.X);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
+        Action act = () => gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.O);
         
         // Assert
-        Action act = () => gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.O);
         act.Should().Throw<Exception>().WithMessage("Space is already occupied");
     }
 }

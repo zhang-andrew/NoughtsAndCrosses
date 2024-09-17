@@ -1,3 +1,4 @@
+using NoughtsAndCrosses.Core.Constant;
 using NoughtsAndCrosses.Core.Enum;
 
 namespace NoughtsAndCrosses.Core.Domain;
@@ -6,15 +7,15 @@ public class Board
 {
     public Space[] Spaces { get; } = new Space[9]
     {
-        new Space(new Coordinate(FileLetter.A, RankNumber.Three)),
-        new Space(new Coordinate(FileLetter.B, RankNumber.Three)),
-        new Space(new Coordinate(FileLetter.C, RankNumber.Three)),
-        new Space(new Coordinate(FileLetter.A, RankNumber.Two)),
-        new Space(new Coordinate(FileLetter.B, RankNumber.Two)),
-        new Space(new Coordinate(FileLetter.C, RankNumber.Two)),
-        new Space(new Coordinate(FileLetter.A, RankNumber.One)),
-        new Space(new Coordinate(FileLetter.B, RankNumber.One)),
-        new Space(new Coordinate(FileLetter.C, RankNumber.One))
+        new Space(new Coordinate(FileLetter.A, 3)),
+        new Space(new Coordinate(FileLetter.B, 3)),
+        new Space(new Coordinate(FileLetter.C, 3)),
+        new Space(new Coordinate(FileLetter.A, 2)),
+        new Space(new Coordinate(FileLetter.B, 2)),
+        new Space(new Coordinate(FileLetter.C, 2)),
+        new Space(new Coordinate(FileLetter.A, 1)),
+        new Space(new Coordinate(FileLetter.B, 1)),
+        new Space(new Coordinate(FileLetter.C, 1))
     };
 
     public void ShowBoard()
