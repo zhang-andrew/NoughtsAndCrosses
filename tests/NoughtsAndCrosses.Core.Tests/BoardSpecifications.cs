@@ -32,17 +32,20 @@ public class BoardSpecifications
             newGame.Board.ShowBoard();
 
             // Assert
-            var expectedOutput = "[ ][ ][ ]\n[ ][ ][ ]\n[ ][ ][ ]\n";
+            var expectedOutput = "3 [ ][ ][ ]\n2 [ ][ ][ ]\n1 [ ][ ][ ]\n";
             // var expectedOutput = "[a3][b3][c3]\n[a2][b2][c2]\n[a1][b1][c1]\n";
-            consoleOutput.ToString().Should().Be(expectedOutput);
+            consoleOutput.ToString().Should().Contain(expectedOutput);
         }
+
+        // Reset the console output
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
     }
     
     [Theory]
     [InlineData(FileLetter.A, RankNumber.One, Mark.X)]
     [InlineData(FileLetter.C, RankNumber.Three, Mark.O)]
     [InlineData(FileLetter.B, RankNumber.Two, Mark.O)]
-    public void Should_be_able_to_place_mark_on_coordinate(FileLetter fileLetter, RankNumber rankNumber, Mark mark)
+    public void Should_be_able_to_place_mark_on_space(FileLetter fileLetter, RankNumber rankNumber, Mark mark)
     {
         // Arrange
         var gameManager = new GameManager();
@@ -50,7 +53,6 @@ public class BoardSpecifications
         
         // Act
         newGame.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
-        newGame.Board.ShowBoard();
 
         // Assert
         newGame.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
@@ -73,8 +75,6 @@ public class Game
     {
         Board = new Board();       
     }
-    
-    
 }
 
 public class Board
@@ -96,6 +96,13 @@ public class Board
     {
         for (int i = 0; i < Spaces.Length; i++)
         {
+            
+            if (i % 3 == 0)
+            {
+                string rankAsString = ((int)Spaces[i].Coordinate.Rank).ToString();
+                Console.Write($"{rankAsString} ");
+            }
+
             string mark = Spaces[i].Mark == Mark.Empty ? " " : Spaces[i].Mark.ToString();
             
             if ((i+1) % 3 == 0)
@@ -107,6 +114,8 @@ public class Board
                 // Console.Write($"[{Spaces[i].Coordinate.Value}]");
             }    
         }
+        
+        Console.WriteLine($"   {FileLetter.A}  {FileLetter.B}  {FileLetter.C}".PadLeft(3));
     }
 
     public void PlaceMark(Coordinate coordinate, Mark mark)
