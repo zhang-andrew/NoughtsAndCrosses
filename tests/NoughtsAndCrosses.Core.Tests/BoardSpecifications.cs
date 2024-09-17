@@ -5,7 +5,7 @@ namespace NoughtsAndCrosses.Core.Tests;
 public class BoardSpecifications
 {
     [Fact]
-    public void Should_have_a_board_with_9_cells()
+    public void Should_have_9_spaces()
     {
         // Arrange
         var gameManager = new GameManager();
@@ -14,7 +14,7 @@ public class BoardSpecifications
         Game game = gameManager.NewGame();
         
         // Assert
-        game.Board.Length.Should().Be(9);
+        game.Board.Spaces.Length.Should().Be(9);
     }
     
     [Fact]
@@ -29,10 +29,11 @@ public class BoardSpecifications
             Console.SetOut(consoleOutput);
             
             // Act
-            newGame.ShowBoard();
+            newGame.Board.ShowBoard();
 
             // Assert
             var expectedOutput = "[ ][ ][ ]\n[ ][ ][ ]\n[ ][ ][ ]\n";
+            // var expectedOutput = "[a3][b3][c3]\n[a2][b2][c2]\n[a1][b1][c1]\n";
             consoleOutput.ToString().Should().Be(expectedOutput);
         }
     }
@@ -48,18 +49,61 @@ public class GameManager
 
 public class Game
 {
-    public string[] Board { get; } = new string[9];
+    public Board Board { get; }
     
+    public Game()
+    {
+        Board = new Board();       
+    }
+    
+    
+}
+
+public class Board
+{
+    public Space[] Spaces { get; } = new Space[9]
+    {
+        new Space("a3"),
+        new Space("b3"),
+        new Space("c3"),
+        new Space("a2"),
+        new Space("b2"),
+        new Space("c2"),
+        new Space("a1"),
+        new Space("b1"),
+        new Space("c1")
+    };
+
     public void ShowBoard()
     {
-        for (int i = 0; i < Board.Length; i++)
+        for (int i = 0; i < Spaces.Length; i++)
         {
+            string mark = Spaces[i].Mark == Mark.Empty ? " " : Spaces[i].Mark.ToString();
+            
             if ((i+1) % 3 == 0)
             {
-                Console.WriteLine("[ ]");
+                Console.WriteLine($"[{mark}]");
             } else {
-                Console.Write("[ ]");
+                Console.Write($"[{mark}]");
             }    
         }
     }
+}
+
+public class Space
+{
+    public Mark Mark { get; set; } = Mark.Empty;
+    public string Coordinate { get; }
+
+    public Space(string coordinate)
+    {
+        Coordinate = coordinate;
+    }
+}
+
+public enum Mark
+{
+    Empty,
+    X,
+    O
 }
