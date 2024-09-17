@@ -63,15 +63,15 @@ public class Board
 {
     public Space[] Spaces { get; } = new Space[9]
     {
-        new Space("a3"),
-        new Space("b3"),
-        new Space("c3"),
-        new Space("a2"),
-        new Space("b2"),
-        new Space("c2"),
-        new Space("a1"),
-        new Space("b1"),
-        new Space("c1")
+        new Space(new Coordinate(FileLetter.A, RankNumber.Three)),
+        new Space(new Coordinate(FileLetter.B, RankNumber.Three)),
+        new Space(new Coordinate(FileLetter.C, RankNumber.Three)),
+        new Space(new Coordinate(FileLetter.A, RankNumber.Two)),
+        new Space(new Coordinate(FileLetter.B, RankNumber.Two)),
+        new Space(new Coordinate(FileLetter.C, RankNumber.Two)),
+        new Space(new Coordinate(FileLetter.A, RankNumber.One)),
+        new Space(new Coordinate(FileLetter.B, RankNumber.One)),
+        new Space(new Coordinate(FileLetter.C, RankNumber.One))
     };
 
     public void ShowBoard()
@@ -83,8 +83,10 @@ public class Board
             if ((i+1) % 3 == 0)
             {
                 Console.WriteLine($"[{mark}]");
+                // Console.WriteLine($"[{Spaces[i].Coordinate.Value}]");
             } else {
                 Console.Write($"[{mark}]");
+                // Console.Write($"[{Spaces[i].Coordinate.Value}]");
             }    
         }
     }
@@ -93,12 +95,42 @@ public class Board
 public class Space
 {
     public Mark Mark { get; set; } = Mark.Empty;
-    public string Coordinate { get; }
+    public Coordinate Coordinate { get; }
 
-    public Space(string coordinate)
+    public Space(Coordinate coordinate)
     {
         Coordinate = coordinate;
     }
+}
+
+/*
+ * the horizontal lines of the board are called ranks
+ * the vertical lines of the board are called files
+ */
+public class Coordinate
+{
+    public string Value => $"{File}{(int)Rank}";
+    public FileLetter File { get; }
+    public RankNumber Rank { get; }
+    public Coordinate(FileLetter fileLetter, RankNumber rankNumber)
+    {
+        File = fileLetter;
+        Rank = rankNumber;
+    }
+}
+
+public enum FileLetter
+{
+    A,
+    B,
+    C
+}
+
+public enum RankNumber
+{
+    One = 1,
+    Two = 2,
+    Three = 3
 }
 
 public enum Mark
