@@ -38,25 +38,22 @@ public class BoardSpecifications
         }
     }
     
-    [Fact]
-    public void Should_be_able_to_place_a_mark_on_the_board()
+    [Theory]
+    [InlineData(FileLetter.A, RankNumber.One, Mark.X)]
+    [InlineData(FileLetter.C, RankNumber.Three, Mark.O)]
+    [InlineData(FileLetter.B, RankNumber.Two, Mark.O)]
+    public void Should_be_able_to_place_mark_on_coordinate(FileLetter fileLetter, RankNumber rankNumber, Mark mark)
     {
         // Arrange
         var gameManager = new GameManager();
         Game newGame = gameManager.NewGame();
         
-        using (var consoleOutput = new StringWriter()) // We need to capture the output of the console to assert
-        {
-            Console.SetOut(consoleOutput);
-            
-            // Act
-            newGame.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.X);
-            newGame.Board.ShowBoard();
+        // Act
+        newGame.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
+        newGame.Board.ShowBoard();
 
-            // Assert
-            var expectedOutput = "[ ][ ][ ]\n[ ][ ][ ]\n[X][ ][ ]\n";
-            consoleOutput.ToString().Should().Be(expectedOutput);
-        }
+        // Assert
+        newGame.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
     }
 }
 
