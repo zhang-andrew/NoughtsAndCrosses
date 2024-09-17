@@ -1,6 +1,8 @@
 using FluentAssertions;
+using NoughtsAndCrosses.Core.Domain;
+using NoughtsAndCrosses.Core.Enum;
 
-namespace NoughtsAndCrosses.Core.Tests;
+namespace NoughtsAndCrosses.Core;
 
 public class BoardSpecifications
 {
@@ -90,116 +92,4 @@ public class Game
     {
         Board = new Board();       
     }
-}
-
-public class Board
-{
-    public Space[] Spaces { get; } = new Space[9]
-    {
-        new Space(new Coordinate(FileLetter.A, RankNumber.Three)),
-        new Space(new Coordinate(FileLetter.B, RankNumber.Three)),
-        new Space(new Coordinate(FileLetter.C, RankNumber.Three)),
-        new Space(new Coordinate(FileLetter.A, RankNumber.Two)),
-        new Space(new Coordinate(FileLetter.B, RankNumber.Two)),
-        new Space(new Coordinate(FileLetter.C, RankNumber.Two)),
-        new Space(new Coordinate(FileLetter.A, RankNumber.One)),
-        new Space(new Coordinate(FileLetter.B, RankNumber.One)),
-        new Space(new Coordinate(FileLetter.C, RankNumber.One))
-    };
-
-    public void ShowBoard()
-    {
-        for (int i = 0; i < Spaces.Length; i++)
-        {
-            
-            if (i % 3 == 0)
-            {
-                string rankAsString = ((int)Spaces[i].Coordinate.Rank).ToString();
-                Console.Write($"{rankAsString} ");
-            }
-
-            string mark = Spaces[i].Mark == Mark.Empty ? " " : Spaces[i].Mark.ToString();
-            
-            if ((i+1) % 3 == 0)
-            {
-                Console.WriteLine($"[{mark}]");
-                // Console.WriteLine($"[{Spaces[i].Coordinate.Value}]");
-            } else {
-                Console.Write($"[{mark}]");
-                // Console.Write($"[{Spaces[i].Coordinate.Value}]");
-            }    
-        }
-        
-        Console.WriteLine($"   {FileLetter.A}  {FileLetter.B}  {FileLetter.C}".PadLeft(3));
-    }
-
-    public void PlaceMark(Coordinate coordinate, Mark mark)
-    {
-        Space space = Spaces.First(s => s.Coordinate.Value == coordinate.Value);
-        space.Mark = mark;
-    }
-}
-
-public class Space
-{
-    private Mark _mark;
-    
-    public Coordinate Coordinate { get; }
-
-    public Space(Coordinate coordinate)
-    {
-        Coordinate = coordinate;
-        _mark = Mark.Empty;
-    }
-
-    public Mark Mark
-    {
-        get { return _mark; }
-        set
-        {
-            if (_mark != Mark.Empty)
-                throw new Exception("Space is already occupied");
-            else
-            {
-                _mark = value;
-            }
-        }
-    }
-}
-
-/*
- * the horizontal lines of the board are called ranks
- * the vertical lines of the board are called files
- */
-public class Coordinate
-{
-    public string Value => $"{File}{(int)Rank}";
-    public FileLetter File { get; }
-    public RankNumber Rank { get; }
-    public Coordinate(FileLetter fileLetter, RankNumber rankNumber)
-    {
-        File = fileLetter;
-        Rank = rankNumber;
-    }
-}
-
-public enum FileLetter
-{
-    A,
-    B,
-    C
-}
-
-public enum RankNumber
-{
-    One = 1,
-    Two = 2,
-    Three = 3
-}
-
-public enum Mark
-{
-    Empty,
-    X,
-    O
 }
