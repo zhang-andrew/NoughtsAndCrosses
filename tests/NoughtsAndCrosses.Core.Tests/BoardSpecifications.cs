@@ -37,6 +37,27 @@ public class BoardSpecifications
             consoleOutput.ToString().Should().Be(expectedOutput);
         }
     }
+    
+    [Fact]
+    public void Should_be_able_to_place_a_mark_on_the_board()
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        Game newGame = gameManager.NewGame();
+        
+        using (var consoleOutput = new StringWriter()) // We need to capture the output of the console to assert
+        {
+            Console.SetOut(consoleOutput);
+            
+            // Act
+            newGame.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.X);
+            newGame.Board.ShowBoard();
+
+            // Assert
+            var expectedOutput = "[ ][ ][ ]\n[ ][ ][ ]\n[X][ ][ ]\n";
+            consoleOutput.ToString().Should().Be(expectedOutput);
+        }
+    }
 }
 
 public class GameManager
@@ -89,6 +110,12 @@ public class Board
                 // Console.Write($"[{Spaces[i].Coordinate.Value}]");
             }    
         }
+    }
+
+    public void PlaceMark(Coordinate coordinate, Mark mark)
+    {
+        Space space = Spaces.First(s => s.Coordinate.Value == coordinate.Value);
+        space.Mark = mark;
     }
 }
 
