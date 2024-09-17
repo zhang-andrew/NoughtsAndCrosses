@@ -48,4 +48,9 @@ public class Board
         Space space = Spaces.First(s => s.Coordinate.Value == coordinate.Value);
         space.Mark = mark;
     }
+
+    public Space GetSpace(Coordinate coordinate)
+    {
+        return Spaces.First(s => s.Coordinate.Value == coordinate.Value);
+    }
 }

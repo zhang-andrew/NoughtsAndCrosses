@@ -11,3 +11,4 @@
 - [ ] A user can either vs a computer or a another user.
 - [ ] Users can connect to other users via the lobby.
 
+- [ ] App recognises coordinates in the format of "a1", "B2", "c3", etc.

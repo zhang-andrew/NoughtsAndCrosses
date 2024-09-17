@@ -21,4 +21,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NoughtsAndCrosses.Core.Tests\NoughtsAndCrosses.Core.Tests.csproj" />
+  </ItemGroup>
+
 </Project>

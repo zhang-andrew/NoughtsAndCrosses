@@ -8,12 +8,12 @@ namespace NoughtsAndCrosses.Core.Domain;
  */
 public class Coordinate
 {
-    public string Value => $"{File}{(int)Rank}";
-    public FileLetter File { get; }
-    public RankNumber Rank { get; }
+    public string Value => $"{File}{Rank}";
+    public string File { get; }
+    public int Rank { get; }
     public Coordinate(FileLetter fileLetter, RankNumber rankNumber)
     {
-        File = fileLetter;
-        Rank = rankNumber;
+        File = fileLetter.ToString();
+        Rank = (int)rankNumber;
     }
 }

@@ -1,6 +1,9 @@
 using FluentAssertions;
 using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Enum;
+using System;
+using NoughtsAndCrosses.ConsoleApp;
+using NoughtsAndCrosses.ConsoleApp.Domain;
 
 namespace NoughtsAndCrosses.Core;
 
@@ -13,10 +16,10 @@ public class BoardSpecifications
         var gameManager = new GameManager();
         
         // Act
-        Game game = gameManager.NewGame();
+        
         
         // Assert
-        game.Board.Spaces.Length.Should().Be(9);
+        gameManager.Game.Board.Spaces.Length.Should().Be(9);
     }
     
     [Fact]
@@ -24,14 +27,13 @@ public class BoardSpecifications
     {
         // Arrange
         var gameManager = new GameManager();
-        Game newGame = gameManager.NewGame();
         
         using (var consoleOutput = new StringWriter()) // We need to capture the output of the console to assert
         {
             Console.SetOut(consoleOutput);
             
             // Act
-            newGame.Board.ShowBoard();
+            gameManager.Game.Board.ShowBoard();
 
             // Assert
             var expectedOutput = "3 [ ][ ][ ]\n2 [ ][ ][ ]\n1 [ ][ ][ ]\n";
@@ -51,13 +53,12 @@ public class BoardSpecifications
     {
         // Arrange
         var gameManager = new GameManager();
-        Game newGame = gameManager.NewGame();
         
         // Act
-        newGame.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
+        gameManager.Game.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
 
         // Assert
-        newGame.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
+        gameManager.Game.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
     }
     
     [Fact]
@@ -65,31 +66,12 @@ public class BoardSpecifications
     {
         // Arrange
         var gameManager = new GameManager();
-        Game newGame = gameManager.NewGame();
         
         // Act
-        newGame.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.X);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.X);
         
         // Assert
-        Action act = () => newGame.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.O);
+        Action act = () => gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.O);
         act.Should().Throw<Exception>().WithMessage("Space is already occupied");
-    }
-}
-
-public class GameManager
-{
-    public Game NewGame()
-    {
-        return new Game();
-    }
-}
-
-public class Game
-{
-    public Board Board { get; }
-    
-    public Game()
-    {
-        Board = new Board();       
     }
 }
