@@ -57,6 +57,21 @@ public class BoardSpecifications
         // Assert
         newGame.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
     }
+    
+    [Fact]
+    public void Should_throw_exception_when_placing_mark_on_occupied_space()
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        Game newGame = gameManager.NewGame();
+        
+        // Act
+        newGame.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.X);
+        
+        // Assert
+        Action act = () => newGame.Board.PlaceMark(new Coordinate(FileLetter.A, RankNumber.One), Mark.O);
+        act.Should().Throw<Exception>().WithMessage("Space is already occupied");
+    }
 }
 
 public class GameManager
