@@ -49,8 +49,10 @@ public class Board
         space.Mark = mark;
     }
 
-    public Space GetSpace(Coordinate coordinate)
+    public Space GetSpace(string coordinate)
     {
-        return Spaces.First(s => s.Coordinate.Value == coordinate.Value);
+        Coordinate parsedCoordinate = Coordinate.Parse(coordinate);
+        
+        return Spaces.First(s => s.Coordinate.Value == parsedCoordinate.Value);
     }
 }

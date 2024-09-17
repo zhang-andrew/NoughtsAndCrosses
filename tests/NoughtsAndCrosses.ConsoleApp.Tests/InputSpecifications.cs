@@ -8,31 +8,23 @@ namespace NoughtsAndCrosses.ConsoleApp.Tests;
 
 public class InputSpecifications
 {
-    [Fact]
-    public void Should_place_a_mark_if_valid_coordinate()
+    [Theory]
+    [InlineData(Mark.X, "a1")]
+    [InlineData(Mark.X, "A2")]
+    [InlineData(Mark.O, "b3")]
+    [InlineData(Mark.O, "B3")]
+    public void Should_place_a_mark_if_valid_coordinate_input_is_given(Mark markType, string input)
     {
-        var gameManager = new GameManager();
-        
         // Arrange
-        // var game = gameManager.NewGame();
-        // var player = new Player(Mark.X);
-        // var opponent = new Player(Mark.O);
-        // game.AddPlayer(player);
-        // game.AddPlayer(opponent);
-
+        var gameManager = new GameManager();
+        var player = new Player(markType);
         
-
         // Act
-        var result = gameManager.ConsoleInput("a1");
-
+        gameManager.ConsoleInput(player, input); // triggers the method that places the mark on the board
+        Space affectedSpace = gameManager.Game.Board.GetSpace(input); 
+        
         // Assert
-        // Assert.Equal(opponent, game.CurrentPlayer);
-        
-        result.Should().Be("A1");
-        
-        Space affectedSpace = gameManager.Game.Board.GetSpace(new Coordinate(FileLetter.A, RankNumber.One)); 
-        
-        affectedSpace.Mark.Should().Be(Mark.X);
+        affectedSpace.Mark.Should().Be(player.Mark);
 
     }
 }

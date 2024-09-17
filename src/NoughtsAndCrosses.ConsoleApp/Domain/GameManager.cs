@@ -17,7 +17,7 @@ public class GameManager
         Game = new Game();
     }
 
-    public string ConsoleInput(string input)
+    public void ConsoleInput(Player player, string input)
     {
         if (input.Length != 2)
             throw new Exception("Invalid coordinate");
@@ -26,12 +26,8 @@ public class GameManager
 
         try
         {
-            FileLetter fileLetter = System.Enum.Parse<FileLetter>(input[0].ToString());
-            RankNumber rankNumber = System.Enum.Parse<RankNumber>(input[1].ToString());
-            
-            Game.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), Mark.X);
-            
-            return $"{fileLetter}{(int)rankNumber}";
+            Coordinate parsedCoordiante = Coordinate.Parse(input);
+            Game.Board.PlaceMark(parsedCoordiante, player.Mark);
         }
         catch (Exception e)
         {

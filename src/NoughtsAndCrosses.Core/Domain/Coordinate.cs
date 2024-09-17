@@ -16,4 +16,17 @@ public class Coordinate
         File = fileLetter.ToString();
         Rank = (int)rankNumber;
     }
+    
+    public static Coordinate Parse(string value)
+    {
+        if (value.Length != 2)
+            throw new Exception("Invalid coordinate");
+        
+        value = value.ToUpper();
+
+        FileLetter fileLetter = System.Enum.Parse<FileLetter>(value[0].ToString());
+        RankNumber rankNumber = System.Enum.Parse<RankNumber>(value[1].ToString());
+        
+        return new Coordinate(fileLetter, rankNumber);
+    }
 }
