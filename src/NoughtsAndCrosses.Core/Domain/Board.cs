@@ -49,6 +49,24 @@ public class Board
         Space space = Spaces.First(s => s.Coordinate.Value == coordinate.Value);
         space.Mark = mark;
     }
+    
+    public void PlaceBestMark(Mark mark) // for Computer Player
+    {
+        // Check for winning move
+        
+        // Stop player from winning
+        
+        // Best setup for winning move
+        
+        // Go for middle square if available
+        
+        // Go for corner square if available
+        
+        // Space bestSpace = GetBestSpace();
+        // bestSpace.Mark = mark;
+
+        throw new NotImplementedException();
+    }
 
     public Space GetSpace(string coordinate)
     {

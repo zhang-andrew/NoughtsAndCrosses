@@ -6,8 +6,11 @@ public class Player
 {
     public Mark Mark { get; }
 
-    public Player(Mark mark)
+    private bool IsComputer = false;
+
+    public Player(Mark mark, bool isComputer = false)
     {
         Mark = mark;
+        IsComputer = isComputer;
     }
 }
