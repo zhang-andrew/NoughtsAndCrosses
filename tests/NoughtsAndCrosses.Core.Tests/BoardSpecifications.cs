@@ -79,7 +79,7 @@ public class BoardSpecifications
     
     [Theory]
     [InlineData(new object[] { new string[] {"a1", "a2", "a3"}})]
-    [InlineData(new object[] { new string[] {"a1", "b2", "a3"}})]
+    [InlineData(new object[] { new string[] {"a1", "B2", "c3"}})]
     public void Should_win_when_three_marks_are_in_a_row(string[] coordinates)
     {
         // Arrange
