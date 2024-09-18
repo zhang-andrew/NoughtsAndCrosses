@@ -50,6 +50,15 @@ public class Board
         space.Mark = mark;
     }
     
+    public void PlaceMarkRandomly(Mark mark)
+    {
+        Random random = new Random();
+        int randomInt = random.Next(0, 9);
+        var randomSpace = Spaces[randomInt];
+        // PlaceMark(randomSpace, mark);
+        randomSpace.Mark = mark;
+    }
+    
     public void PlaceBestMark(Mark mark) // for Computer Player
     {
         // Check for winning move
