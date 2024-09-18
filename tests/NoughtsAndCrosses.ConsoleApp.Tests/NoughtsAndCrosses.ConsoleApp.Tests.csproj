@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NoughtsAndCrosses.Core.Tests\NoughtsAndCrosses.Core.Tests.csproj" />
+    <ProjectReference Include="..\..\src\NoughtsAndCrosses.ConsoleApp\NoughtsAndCrosses.ConsoleApp.csproj" />
+    <ProjectReference Include="..\..\src\NoughtsAndCrosses.Core\NoughtsAndCrosses.Core.csproj" />
   </ItemGroup>
 
 </Project>

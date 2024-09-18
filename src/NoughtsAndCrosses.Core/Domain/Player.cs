@@ -1,6 +1,6 @@
 using NoughtsAndCrosses.Core.Enum;
 
-namespace NoughtsAndCrosses.ConsoleApp.Domain;
+namespace NoughtsAndCrosses.Core.Domain;
 
 public class Player
 {

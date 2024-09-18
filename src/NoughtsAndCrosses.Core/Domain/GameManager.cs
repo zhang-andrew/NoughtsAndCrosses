@@ -1,11 +1,14 @@
-using NoughtsAndCrosses.Core.Domain;
-using NoughtsAndCrosses.Core.Enum;
+using NoughtsAndCrosses.Core.Service;
 
-namespace NoughtsAndCrosses.ConsoleApp.Domain;
+namespace NoughtsAndCrosses.Core.Domain;
 
 public class GameManager
 {
     public Game Game { get; set; }
+    public Player[] Players { get; set; } = new Player[2];
+    public Player PlayerWithTurn { get; set; }
+
+    public ConsoleService ConsoleService;
 
     public GameManager()
     {
@@ -34,6 +37,8 @@ public class GameManager
             throw new Exception("Invalid coordinate");
         }
     }
+    
+    
 }
 
 

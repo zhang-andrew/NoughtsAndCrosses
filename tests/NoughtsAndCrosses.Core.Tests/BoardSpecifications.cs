@@ -3,8 +3,8 @@ using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Enum;
 using System;
 using System.Runtime.CompilerServices;
-using NoughtsAndCrosses.ConsoleApp;
-using NoughtsAndCrosses.ConsoleApp.Domain;
+// using NoughtsAndCrosses.ConsoleApp;
+// using NoughtsAndCrosses.ConsoleApp.Domain;
 using NoughtsAndCrosses.Core.Constant;
 
 namespace NoughtsAndCrosses.Core;
