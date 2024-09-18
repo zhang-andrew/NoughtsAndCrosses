@@ -59,9 +59,6 @@ public class Board
     
     public bool HasWinner()
     {
-        if (HasDraw())
-            return false;
-        
         bool hasWinner = false;
         
         List<string[]> winningCombinations = new()
@@ -111,7 +108,11 @@ public class Board
 
     public bool HasDraw()
     {
-        // implement
-        throw new NotImplementedException();
+        if (HasWinner())
+            return false;
+        
+        bool fullBoard = Spaces.All(s => s.Mark != Mark.Empty);
+
+        return fullBoard;
     }
 }
