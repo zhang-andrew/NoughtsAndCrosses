@@ -12,4 +12,5 @@
 - [ ] Users can connect to other users via the lobby.
 
 - [x] App recognises coordinates in the format of "a1", "B2", "c3", etc.
+- [ ] App can only recognise 2 players.
 - [ ] App recognises who is the current player's turn.
