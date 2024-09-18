@@ -1,6 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using NoughtsAndCrosses.WebSocketServer.Domain;
 
-app.MapGet("/", () => "Hello World!");
-
-app.Run();
+Server server = new Server();
+server.Start(args); // remember args is a global variable that is passed to the program on startup (it's the flags passed in terminal execution) 
