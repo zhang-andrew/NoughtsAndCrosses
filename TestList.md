@@ -14,3 +14,16 @@
 - [x] App recognises coordinates in the format of "a1", "B2", "c3", etc.
 - [ ] App can only recognise 2 players.
 - [ ] App recognises who is the current player's turn.
+
+# ConsoleApp Tests
+- [ ] Be able to consume Console commands and be connected to a WebSocket server
+- [ ] Receive WebSocket messages and react accordingly
+- [ ] Offline mode
+
+# WebSocketServer Tests
+- [ ] Handle multiple connections
+- [ ] Handle multiple concurrent lobbies/games
+- [ ] Differentiate between Clients (player's consoleApp clients)
+- [ ] Persist a lobby/game state
+- [ ] Player moves (placing an "X" or an "O") should update the lobby/game state and then broadcast the updated state to all clients in the lobby/game
+ 
