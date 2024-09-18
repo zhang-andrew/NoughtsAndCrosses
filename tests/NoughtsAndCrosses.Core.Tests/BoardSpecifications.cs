@@ -94,4 +94,26 @@ public class BoardSpecifications
         // Assert
         gameManager.Game.Board.HasWinner().Should().BeTrue();
     }
+    
+    [Fact]
+    public void Should_draw_when_all_spaces_are_occupied_and_no_winner()
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        
+        // Act
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 2), Mark.X);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 3), Mark.O);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.B, 1), Mark.O);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.B, 2), Mark.O);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.B, 3), Mark.X);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.C, 1), Mark.X);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.C, 2), Mark.O);
+        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.C, 3), Mark.X);
+        
+        // Assert
+        gameManager.Game.Board.HasWinner().Should().BeFalse();
+        gameManager.Game.Board.HasDraw().Should().BeTrue();
+    }
 }

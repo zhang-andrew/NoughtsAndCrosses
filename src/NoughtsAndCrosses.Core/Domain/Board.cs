@@ -59,6 +59,9 @@ public class Board
     
     public bool HasWinner()
     {
+        if (HasDraw())
+            return false;
+        
         bool hasWinner = false;
         
         List<string[]> winningCombinations = new()
@@ -104,5 +107,11 @@ public class Board
             }
         }
         return hasWinner;
+    }
+
+    public bool HasDraw()
+    {
+        // implement
+        throw new NotImplementedException();
     }
 }
