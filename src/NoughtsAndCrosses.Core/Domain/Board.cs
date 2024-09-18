@@ -56,4 +56,53 @@ public class Board
         
         return Spaces.First(s => s.Coordinate.Value == parsedCoordinate.Value);
     }
+    
+    public bool HasWinner()
+    {
+        bool hasWinner = false;
+        
+        List<string[]> winningCombinations = new()
+        {
+            new string[]{ "A1", "B1", "C1" }, // horizontal - 1st row
+            new string[]{ "A2", "B2", "C2" }, // horizontal - 2nd row
+            new string[]{ "A3", "B3", "C3" }, // horizontal - 3rd row
+            new string[]{ "A1", "A2", "A3" }, // vertical - 1st column
+            new string[]{ "B1", "B2", "B3" }, // vertical - 2nd column
+            new string[]{ "C1", "C2", "C3" }, // vertical - 3rd column
+            new string[]{ "A1", "B2", "C3" }, // diagonal - top left to bottom right
+            new string[]{ "A3", "B2", "C1" }  // diagonal - bottom left to top right
+        };
+
+        List<string> xMarks = new();
+        List<string> oMarks = new();
+        
+        foreach (var space in Spaces)
+        {
+            if (space.Mark == Mark.X)
+            {
+                xMarks.Add(space.Coordinate.Value);
+            }
+            else if (space.Mark == Mark.O)
+            {
+                oMarks.Add(space.Coordinate.Value);
+            }
+        }
+
+        for (int i = 0; i < winningCombinations.Count; i++)
+        {
+            string[] coordinates = winningCombinations[i];
+            
+            if (coordinates.All(coordinate => xMarks.Contains(coordinate)))
+            {
+                hasWinner = true;
+                break;
+            }
+            else if (coordinates.All(s => oMarks.Contains(s)))
+            {
+                hasWinner = true;
+                break;
+            }
+        }
+        return hasWinner;
+    }
 }

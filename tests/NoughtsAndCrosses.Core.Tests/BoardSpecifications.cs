@@ -2,6 +2,7 @@ using FluentAssertions;
 using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Enum;
 using System;
+using System.Runtime.CompilerServices;
 using NoughtsAndCrosses.ConsoleApp;
 using NoughtsAndCrosses.ConsoleApp.Domain;
 using NoughtsAndCrosses.Core.Constant;
@@ -74,5 +75,23 @@ public class BoardSpecifications
         
         // Assert
         act.Should().Throw<Exception>().WithMessage("Space is already occupied");
+    }
+    
+    [Theory]
+    [InlineData(new object[] { new string[] {"a1", "a2", "a3"}})]
+    [InlineData(new object[] { new string[] {"a1", "b2", "a3"}})]
+    public void Should_win_when_three_marks_are_in_a_row(string[] coordinates)
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        
+        // Act
+        foreach (string coordinate in coordinates)
+        {
+            gameManager.Game.Board.PlaceMark(Coordinate.Parse(coordinate), Mark.X);
+        }
+        
+        // Assert
+        gameManager.Game.Board.HasWinner().Should().BeTrue();
     }
 }
