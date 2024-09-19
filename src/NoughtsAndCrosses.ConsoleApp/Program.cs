@@ -1,41 +1,46 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using NoughtsAndCrosses.ConsoleApp.Domain;
+
+using NoughtsAndCrosses.Core.Service;
+using NoughtsAndCrosses.Core.Domain;
 
 Console.WriteLine("Hello, World!");
 
-var consoleAppClient = new Client();
+// var playerClient = new PlayerClient();
+// var consoleService = new ConsoleService(playerClient);
+//
+// // Create tasks
+// var connectToWebSocket = playerClient.ConnectToWebSocket("ws://localhost:5148/ws");
+// var monitorConsoleInput = consoleService.MonitorConsoleInput();
+//
+// await Task.WhenAll(
+//     connectToWebSocket,
+//     monitorConsoleInput
+// );
 
-// Create tasks
-var webSocketTask = consoleAppClient.ConnectToWebSocket("ws://localhost:5148/ws");
-// var randomTask = consoleAppClient.SendToWebSocket("testtt");
-var consoleInputTask = ReadConsoleInput(consoleAppClient);
-
-await Task.WhenAll(
-    webSocketTask,
-    // randomTask,
-    consoleInputTask
-);
+var gm = new GameManager();
+gm.Run();
 
 
-static async Task ReadConsoleInput(Client client = null)
-{
-    while (true)
-    {
-        var input = Console.ReadLine();
-        if (input == "exit")
-        {
-            break;
-        }
-        
-        if (client != null)
-        {
-            await client.SendToWebSocket(input);
-        }
-        
-        Console.WriteLine($"You entered: {input}");
-        // Add logic to send input to WebSocket server if needed
-    }
-}
+//
+// static async Task ReadConsoleInput(PlayerClient client = null)
+// {
+//     while (true)
+//     {
+//         var input = Console.ReadLine();
+//         if (input == "exit")
+//         {
+//             break;
+//         }
+//         
+//         if (client != null)
+//         {
+//             await client.SendToWebSocket(input);
+//         }
+//         
+//         Console.WriteLine($"You entered: {input}");
+//         // Add logic to send input to WebSocket server if needed
+//     }
+// }
 
 //
 // var serviceProvider = new ServiceCollection()

@@ -16,6 +16,8 @@
 - [ ] App recognises who is the current player's turn.
 
 # ConsoleApp Tests
+- [ ] Provide options to start a new game locally (against a computer/against another player) or online (against another player)
+- [ ] Persist game state locally (client-side)
 - [ ] Be able to consume Console commands and be connected to a WebSocket server
 - [ ] Receive WebSocket messages and react accordingly
 - [ ] Offline mode
@@ -24,6 +26,6 @@
 - [ ] Handle multiple connections
 - [ ] Handle multiple concurrent lobbies/games
 - [ ] Differentiate between Clients (player's consoleApp clients)
-- [ ] Persist a lobby/game state
+- [ ] Persist game state in memory (on the server)
 - [ ] Player moves (placing an "X" or an "O") should update the lobby/game state and then broadcast the updated state to all clients in the lobby/game
  

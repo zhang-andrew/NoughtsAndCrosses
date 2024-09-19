@@ -14,20 +14,20 @@ public class BoardSpecifications
     [Fact]
     public void Should_have_9_spaces()
     {
-        // Arrange
+        // Arrange      
         var gameManager = new GameManager();
         
         // Act
         
         
         // Assert
-        gameManager.Game.Board.Spaces.Length.Should().Be(9);
+        gameManager.GameState.Board.Spaces.Length.Should().Be(9);
     }
     
     [Fact]
     public void Should_display_a_3x3_board()
     {
-        // Arrange
+        // Arrange      
         var gameManager = new GameManager();
         
         using (var consoleOutput = new StringWriter()) // We need to capture the output of the console to assert
@@ -35,7 +35,7 @@ public class BoardSpecifications
             Console.SetOut(consoleOutput);
             
             // Act
-            gameManager.Game.Board.ShowBoard();
+            gameManager.GameState.Board.ShowBoard();
 
             // Assert
             var expectedOutput = "3 [ ][ ][ ]\n2 [ ][ ][ ]\n1 [ ][ ][ ]\n";
@@ -53,25 +53,25 @@ public class BoardSpecifications
     [InlineData(FileLetter.B, 2, Mark.O)]
     public void Should_be_able_to_place_mark_on_space(string fileLetter, int rankNumber, Mark mark)
     {
-        // Arrange
+        // Arrange      
         var gameManager = new GameManager();
         
         // Act
-        gameManager.Game.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
 
         // Assert
-        gameManager.Game.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
+        gameManager.GameState.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
     }
     
     [Fact]
     public void Should_throw_exception_when_placing_mark_on_occupied_space()
     {
-        // Arrange
+        // Arrange      
         var gameManager = new GameManager();
         
         // Act
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
-        Action act = () => gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.O);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
+        Action act = () => gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.O);
         
         // Assert
         act.Should().Throw<Exception>().WithMessage("Space is already occupied");
@@ -82,38 +82,38 @@ public class BoardSpecifications
     [InlineData(new object[] { new string[] {"a1", "B2", "c3"}})]
     public void Should_win_when_three_marks_are_in_a_row(string[] coordinates)
     {
-        // Arrange
+        // Arrange      
         var gameManager = new GameManager();
         
         // Act
         foreach (string coordinate in coordinates)
         {
-            gameManager.Game.Board.PlaceMark(Coordinate.Parse(coordinate), Mark.X);
+            gameManager.GameState.Board.PlaceMark(Coordinate.Parse(coordinate), Mark.X);
         }
         
         // Assert
-        gameManager.Game.Board.HasWinner().Should().BeTrue();
+        gameManager.GameState.Board.HasWinner().Should().BeTrue();
     }
     
     [Fact]
     public void Should_draw_when_all_spaces_are_occupied_and_no_winner()
     {
-        // Arrange
+        // Arrange      
         var gameManager = new GameManager();
         
         // Act
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 2), Mark.X);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.A, 3), Mark.O);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.B, 1), Mark.O);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.B, 2), Mark.O);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.B, 3), Mark.X);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.C, 1), Mark.X);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.C, 2), Mark.O);
-        gameManager.Game.Board.PlaceMark(new Coordinate(FileLetter.C, 3), Mark.X);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 2), Mark.X);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 3), Mark.O);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.B, 1), Mark.O);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.B, 2), Mark.O);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.B, 3), Mark.X);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.C, 1), Mark.X);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.C, 2), Mark.O);
+        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.C, 3), Mark.X);
         
         // Assert
-        gameManager.Game.Board.HasWinner().Should().BeFalse();
-        gameManager.Game.Board.HasDraw().Should().BeTrue();
+        gameManager.GameState.Board.HasWinner().Should().BeFalse();
+        gameManager.GameState.Board.HasDraw().Should().BeTrue();
     }
 }

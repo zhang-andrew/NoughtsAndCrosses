@@ -28,24 +28,16 @@ public class Coordinate
         string[] validFileLetters = new string[3] {FileLetter.A, FileLetter.B, FileLetter.C};
         int[] validRankNumbers = new int[3] {1, 2, 3};
 
-        try
-        {
-            string fileLetter = value[0].ToString();
-            int rankNumber = Int32.Parse(value[1].ToString());
-            
-            if (!validFileLetters.Contains(fileLetter))
-                throw new Exception("Invalid coordinate (fileLetter)");
-            
-            if (!validRankNumbers.Contains(rankNumber))
-                throw new Exception("Invalid coordinate (rankNumber)");
-            
-            // Get the FileLetter and RankNumber from the string
-            return new Coordinate(fileLetter, rankNumber);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new Exception("Invalid coordinate");
-        }
+        string fileLetter = value[0].ToString();
+        int rankNumber = Int32.Parse(value[1].ToString());
+        
+        if (!validFileLetters.Contains(fileLetter))
+            throw new Exception("Invalid coordinate (fileLetter)");
+        
+        if (!validRankNumbers.Contains(rankNumber))
+            throw new Exception("Invalid coordinate (rankNumber)");
+        
+        // Get the FileLetter and RankNumber from the string
+        return new Coordinate(fileLetter, rankNumber);
     }
 }

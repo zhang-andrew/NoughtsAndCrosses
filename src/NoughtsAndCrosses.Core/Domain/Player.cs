@@ -4,13 +4,19 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class Player
 {
-    public Mark Mark { get; }
+    public Guid Id { get; } = Guid.NewGuid();
+    public Mark AssignedMark { get; set; }
 
     private bool IsComputer = false;
 
-    public Player(Mark mark, bool isComputer = false)
+    public Player(Mark assignedMark, bool isComputer = false)
     {
-        Mark = mark;
         IsComputer = isComputer;
+        AssignedMark = assignedMark;
+    }
+
+    public void AssignMark(Mark mark)
+    {
+        AssignedMark = mark;
     }
 }

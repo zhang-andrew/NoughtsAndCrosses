@@ -17,14 +17,14 @@ public class InputSpecifications
     {
         // Arrange
         var gameManager = new GameManager();
-        var player = new Player(markType);
+        gameManager.CreateLocalPlayer(markType);
         
         // Act
-        gameManager.ConsoleInput(player, input); // triggers the method that places the mark on the board
-        Space affectedSpace = gameManager.Game.Board.GetSpace(input); 
+        gameManager.HandleGameInput(input); // triggers the method that places the mark on the board
+        Space affectedSpace = gameManager.GameState.Board.GetSpace(input); 
         
         // Assert
-        affectedSpace.Mark.Should().Be(player.Mark);
+        affectedSpace.Mark.Should().Be(gameManager.LocalPlayer.AssignedMark);
     }
     
     [Theory]
@@ -34,15 +34,18 @@ public class InputSpecifications
     public void Should_throw_exception_if_coordinate_input_is_invalid(Mark markType, string input)
     {
         // Arrange
+        
         var gameManager = new GameManager();
-        var player = new Player(markType);
+        gameManager.CreateLocalPlayer(markType);
         
         // Act
-        Action act = () => gameManager.ConsoleInput(player, input);
+        Action act = () => gameManager.HandleGameInput(input);
         
         // Assert
         // act.Should().Throw<Exception>().WithMessage("Invalid coordinate");
 
         act.Should().Throw<Exception>();
     }
+    
+    
 }

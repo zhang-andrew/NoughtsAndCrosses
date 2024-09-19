@@ -1,13 +1,13 @@
 using System.Net.WebSockets;
 using System.Text;
 
-namespace NoughtsAndCrosses.ConsoleApp.Domain;
+namespace NoughtsAndCrosses.Core.Domain;
 
-public class Client
+public class PlayerClient
 {
     private ClientWebSocket _client = new();
     
-    public Client()
+    public PlayerClient()
     {
     }
 
