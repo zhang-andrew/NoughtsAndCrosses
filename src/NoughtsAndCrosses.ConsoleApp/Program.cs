@@ -6,7 +6,7 @@ var gm = new GameManager();
 
 AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
 {
-    Console.WriteLine($"ProcessExit event triggered. Game running?: {gm.ListeningForInputs}");
+    Console.WriteLine($"ProcessExit event triggered. Game running?: {gm.IsListeningForInputs}");
 };
 
 gm.Run();

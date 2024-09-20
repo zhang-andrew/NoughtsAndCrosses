@@ -62,8 +62,25 @@ public class InputSpecifications
         gameManager.HandleInput(GeneralCommand.CloseApplication);
         
         // Assert
-        gameManager.ListeningForInputs.Should().BeFalse();
+        gameManager.IsListeningForInputs.Should().BeFalse();
 
+    }
+    
+    [Theory]
+    [InlineData(GameScreen.OfflineGame)]
+    [InlineData(GameScreen.OnlineGame)]
+    [InlineData(GameScreen.Lobby)]
+    public void Should_go_back_to_menu_when_back_command_is_given(GameScreen gameScreen)
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        gameManager.ChangeScreen(gameScreen);
+        
+        // Act
+        gameManager.HandleInput(GeneralCommand.Back);
+        
+        // Assert
+        gameManager.GameScreen.Should().Be(GameScreen.Menu);
     }
     
     [Fact]

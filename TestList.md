@@ -29,3 +29,5 @@
 - [ ] Persist game state in memory (on the server)
 - [ ] Player moves (placing an "X" or an "O") should update the lobby/game state and then broadcast the updated state to all clients in the lobby/game
  
+
+- [ ] Decouple consoleApp input commands from Core GameManager logic

@@ -18,7 +18,7 @@ public class GameManager
     
     private ConsoleService _consoleService;
 
-    public bool ListeningForInputs;
+    public bool IsListeningForInputs;
 
 
     public GameManager()
@@ -38,9 +38,9 @@ public class GameManager
     
     private async Task ListenForInputs()
     {
-        ListeningForInputs = true;
+        IsListeningForInputs = true;
         
-        while (ListeningForInputs)
+        while (IsListeningForInputs)
         {
             try
             {
@@ -48,7 +48,7 @@ public class GameManager
                 
                 HandleInput(input);
                 
-                if (ListeningForInputs == false)
+                if (IsListeningForInputs == false)
                 {
                     break;
                 }
@@ -65,18 +65,29 @@ public class GameManager
         if (input == GeneralCommand.CloseApplication)
         {
             _consoleService.SystemMessage(GameScreen, "Exiting...");
-            ListeningForInputs = false;
+            IsListeningForInputs = false;
             return;
         }
         
+        if (GameScreen != GameScreen.Menu)
+        {
+            if (input == GeneralCommand.Back)
+            {
+                ChangeScreen(GameScreen.Menu);
+                return;
+            }
+        }
+
         switch (GameScreen)
         {
             case GameScreen.Menu:
                 HandleMenuInput(input);
                 break;
             case GameScreen.OfflineGame:
-            case GameScreen.Lobby:
+            case GameScreen.OnlineGame:
                 HandleGameInput(input);
+                break;
+            case GameScreen.Lobby:
                 break;
             default:
                 _consoleService.SystemMessage(GameScreen, "Invalid application state.");

@@ -4,5 +4,6 @@ public enum GameScreen
 {
     Menu,
     OfflineGame,
+    OnlineGame,
     Lobby
 }
