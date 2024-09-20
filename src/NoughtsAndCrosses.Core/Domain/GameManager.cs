@@ -8,7 +8,7 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class GameManager
 {
-    public AppState AppState = AppState.MainMenu;
+    private AppState _appState = AppState.Menu;
     public Player? LocalPlayer = null;
     
     private ConsoleService _consoleService;
@@ -25,16 +25,15 @@ public class GameManager
 
     public async void Run()
     {
-        _consoleService.SystemMessage("Welcome to Noughts and Crosses");
-        _consoleService.SystemMessage("1 - New offline game, 2 - New online game, 3 - Join online game");
+        _consoleService.SystemMessage(_appState, "Welcome to Noughts and Crosses");
+        _consoleService.SystemMessage(_appState, "1 - New offline game, 2 - New online game, 3 - Join online game");
 
         await ListenForInputs();
     }
 
     private async Task ListenForInputs()
     {
-        bool running = true;
-        while (running)
+        while (true)
         {
             try
             {
@@ -42,28 +41,27 @@ public class GameManager
             
                 if (input == "exit")
                 {
-                    running = false;
-                    // break;
+                    _consoleService.SystemMessage(_appState, "Exiting...");
+                    break; // immediately exit the loop
                 }
             
-                switch (AppState)
+                switch (_appState)
                 {
-                    case AppState.MainMenu:
+                    case AppState.Menu:
                         HandleMenuInput(input);
                         break;
-                    case AppState.InOfflineGame:
-                    case AppState.InOnlineGame:
+                    case AppState.OfflineGame:
+                    case AppState.Lobby:
                         HandleGameInput(input);
                         break;
                     default:
-                        _consoleService.SystemMessage("Invalid application state.");
+                        _consoleService.SystemMessage(_appState, "Invalid application state.");
                         break;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                // throw;
+                _consoleService.UnhandledExceptionMessage(e);
             }
         }
     }
@@ -110,7 +108,7 @@ public class GameManager
         
         // catch (Exception e)
         // {
-            // _consoleService.SystemMessage(e.Message);
+            // _consoleService.SystemMessage(AppState, e.Message);
             // Console.WriteLine(e);
         //     throw;
         // }
@@ -120,16 +118,15 @@ public class GameManager
     
     public void NewOfflineGame()
     {
-        ChangeAppState(AppState.InOfflineGame);
+        ChangeAppState(AppState.OfflineGame);
         
-        _consoleService.SystemMessage("New offline game started");
     }
     
     public async Task NewOnlineGame(string serverUri)
     {
-        ChangeAppState(AppState.InOnlineGame);
+        ChangeAppState(AppState.Lobby);
         
-        var playerClient = new PlayerClient();
+        var playerClient = new PlayerClient(_consoleService);
         
         // Start the WebSocket connection in the background
         Task.Run(async () =>
@@ -140,18 +137,28 @@ public class GameManager
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _consoleService.UnhandledExceptionMessage(e);
                 // throw; // we don't want to throw because we want to keep the app running
             }
         });
-               
-        Console.WriteLine("New online game started");
     }
     
     private void ChangeAppState(AppState newState)
     {
-        AppState = newState;
-        _consoleService.SystemMessage($"Navigated to {newState}");
+        string stateName;
+        _appState = newState;
+        
+        switch (_appState)
+        {
+            case AppState.OfflineGame:
+                stateName = "Game (Offline)";
+                break;
+            default:
+                stateName = _appState.ToString();
+                break;
+        }
+        
+        _consoleService.SystemMessage(_appState, $"Navigated to \"{stateName}\".");
     }
     
     public void CreateLocalPlayer(Mark mark)

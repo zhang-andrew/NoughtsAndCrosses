@@ -26,7 +26,7 @@ public class Server
             {
                 using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                 Console.WriteLine("New client connected");
-
+                
                 await HandleWebSocketConnection(webSocket);
             }
             else

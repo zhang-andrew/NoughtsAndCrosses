@@ -1,39 +1,37 @@
 using System.Net.WebSockets;
 using System.Text;
+using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Domain;
 
 public class PlayerClient
 {
     private ClientWebSocket _client = new();
-    
-    public PlayerClient()
+    private ConsoleService _consoleService;
+
+    public PlayerClient(ConsoleService consoleService)
     {
+        _consoleService = consoleService;
     }
 
     public async Task ConnectToWebSocket(string uri) // e.g. "ws://localhost:5000/ws" or "wss://localhost:5001/ws"
     {
-        _client = new ClientWebSocket();
-        await _client.ConnectAsync(new Uri(uri), CancellationToken.None);
-        Console.WriteLine("Connected!");
-        
-        await SendToWebSocket("helllllllllllo");
-        
+        try
+        {
+            _client = new ClientWebSocket();
+            await _client.ConnectAsync(new Uri(uri), CancellationToken.None);
+            Console.WriteLine("Connected!");
 
-        // var sendBuffer = Encoding.UTF8.GetBytes("Hello Server!");
-        // await _client.SendAsync(new ArraySegment<byte>(sendBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
-        //
-        // var receiveBuffer = new byte[1024];
-        // var result = await _client.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
-        // Console.WriteLine($"Received: {Encoding.UTF8.GetString(receiveBuffer, 0, result.Count)}");
-        //
-        // var sendBuffer2 = Encoding.UTF8.GetBytes("Hello Server! Blah");
-        // await _client.SendAsync(new ArraySegment<byte>(sendBuffer2), WebSocketMessageType.Text, true, CancellationToken.None);
-        //
-        // var result2 = await _client.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
-        // Console.WriteLine($"Received: {Encoding.UTF8.GetString(receiveBuffer, 0, result2.Count)}");
-        //
-        // await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+            await SendToWebSocket("helllllllllllo");
+        }
+        catch (WebSocketException e)
+        {
+            _consoleService.HandledExceptionMessage(e, "Ensure the server is running and the URI is correct.");
+        } 
+        catch (Exception e)
+        {
+            throw;
+        }
     }
 
     public async Task SendToWebSocket(string input)
