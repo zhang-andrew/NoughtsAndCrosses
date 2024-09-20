@@ -14,11 +14,11 @@ public class HostGameScreen : IScreen
         _gameManager = gameManager;
     }
     
-    public void HandleInputs(string input)
+    public bool HandleInput(string input)
     {
         // wait for the other player to join from server
-        
-        throw new NotImplementedException();
+        _consoleService.SystemMessage(GameScreen.HostGame, $"Waiting for the other player to join...");
+        return true;
     }
     
     public void OnEntry()

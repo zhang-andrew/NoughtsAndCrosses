@@ -13,10 +13,13 @@ public class JoinGameScreen : IScreen
         _gameManager = gameManager;
     }
     
-    public void HandleInputs(string input)
+    public bool HandleInput(string input)
     {
         _consoleService.SystemMessage(GameScreen.JoinGame, $"You typed {input}");
-        // throw new NotImplementedException();
+        
+        // Check if input is a valid lobby code
+        // Else false
+        return false;
     }
 
     public void OnEntry()

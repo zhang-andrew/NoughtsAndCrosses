@@ -17,7 +17,7 @@ public class GameManager
     public bool IsListeningForInputs;
     
     private ConsoleService _consoleService;
-    private Dictionary<GameScreen, IScreen> _screens;
+    public Dictionary<GameScreen, IScreen> Screens;
     
     public GameManager()
     {
@@ -25,7 +25,7 @@ public class GameManager
         
         BoardState = new BoardState();
         
-        _screens = new ()
+        Screens = new ()
         {
             { GameScreen.Menu, new MenuScreen(this) },
             { GameScreen.HostGame, new HostGameScreen(this) },
@@ -37,7 +37,7 @@ public class GameManager
     public async void Run()
     {
         CurrentScreen = GameScreen.Menu;
-        _screens[CurrentScreen].OnEntry();
+        Screens[CurrentScreen].OnEntry();
         await ListenForInputs();
     }
     
@@ -86,17 +86,21 @@ public class GameManager
         }
         
         // Handle screen-specific commands
-        _screens[CurrentScreen].HandleInputs(input);
+        bool wasHandled = Screens[CurrentScreen].HandleInput(input);
+        
+        // Handle invalid command
+        if (!wasHandled)
+            _consoleService.SystemMessage(CurrentScreen, "Invalid command.");
     }
     
     public void ChangeScreen(GameScreen newMode)
     {
-        _screens[CurrentScreen].OnExit();
+        Screens[CurrentScreen].OnExit();
         
         CurrentScreen = newMode;
         _consoleService.SystemMessage(CurrentScreen, $"Navigated to \"{CurrentScreen}\".");
         
-        _screens[CurrentScreen].OnEntry();
+        Screens[CurrentScreen].OnEntry();
     }
     
     public void CreateLocalPlayer(Mark mark)

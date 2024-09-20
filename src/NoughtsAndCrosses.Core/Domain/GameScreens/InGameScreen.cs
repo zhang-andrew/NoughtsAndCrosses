@@ -13,7 +13,7 @@ public class InGameScreen : IScreen
         _gameManager = gameManager;
     }
     
-    public void HandleInputs(string input)
+    public bool HandleInput(string input)
     {
         if (_gameManager.LocalPlayer == null)
         {
@@ -38,6 +38,8 @@ public class InGameScreen : IScreen
         {
             _consoleService.SystemMessage(GameScreen.InGameScreen, "Game over. Type \"back\" to go back to the menu.");
         }
+
+        return true;
     }
 
     public void OnEntry()

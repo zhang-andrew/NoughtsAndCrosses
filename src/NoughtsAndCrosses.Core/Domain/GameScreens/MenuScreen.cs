@@ -13,19 +13,24 @@ public class MenuScreen : IScreen
         _gameManager = gameManager;
     }
     
-    public void HandleInputs(string input)
+    public bool HandleInput(string input)
     {
         switch (input)
         {
             case MenuCommand.GoToOfflineGameScreen:
                 _gameManager.ChangeScreen(GameScreen.InGameScreen);
+                return true;
                 break;
             case MenuCommand.GoToHostScreen:
                 _gameManager.ChangeScreen(GameScreen.HostGame);
+                return true;
                 break;
             case MenuCommand.GoToJoinOnlineGame:
                 _gameManager.ChangeScreen(GameScreen.JoinGame);
+                return true;
                 break;
+            default:
+                return false;
         }
     }
 

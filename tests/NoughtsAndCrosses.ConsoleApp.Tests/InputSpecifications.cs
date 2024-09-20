@@ -98,8 +98,18 @@ public class InputSpecifications
         gameManager.CurrentScreen.Should().Be(GameScreen.HostGame);
     }
 
-
-    public void Should_accept_menu_commands_in_menu()
+    [Fact]
+    public void Should_log_invalid_command_if_given()
     {
+        // Arrange
+        var gameManager = new GameManager();
+        gameManager.ChangeScreen(GameScreen.Menu);
+        
+        // Act
+        bool worked = gameManager.Screens[gameManager.CurrentScreen].HandleInput("ASDF");
+        
+        // Assert
+        worked.Should().Be(false);
+        // _consoleService.SystemMessage(GameScreen.Menu, "Invalid command.").Should().BeTrue();
     }
 }
