@@ -31,9 +31,8 @@ public class MenuScreen : IScreen
 
     public void OnEntry()
     {
-        _consoleService.SystemMessage(GameScreen.Menu, "Welcome to Noughts and Crosses");
-        _consoleService.SystemMessage(GameScreen.Menu, "1 - New offline game, 2 - New online game, 3 - Join online game");
-
+        _consoleService.SystemMessage(GameScreen.Menu, "Welcome to Noughts and Crosses.");
+        _consoleService.SystemMessage(GameScreen.Menu, $"Type the number of the option you want to select.\n\t1 - Play Game\n\t2 - Host Game (Online)\n\t3 - Join Game (Online)");
     }
 
     public void OnExit()

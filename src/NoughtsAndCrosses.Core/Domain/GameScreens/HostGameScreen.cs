@@ -42,7 +42,7 @@ public class HostGameScreen : IScreen
         // Generate random code, and send to server
         string randomCode = new Random().Next(1000, 9999).ToString();
         
-        _consoleService.SystemMessage(GameScreen.HostGame, $"Share the following code with your friend to join the game: {randomCode}");
+        _consoleService.SystemMessage(GameScreen.HostGame, $"Share the following lobby code with your friend to join the game: {randomCode}");
     }
 
     public void OnExit()

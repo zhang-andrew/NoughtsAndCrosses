@@ -27,11 +27,28 @@ public class InGameScreen : IScreen
         
         Coordinate parsedCoordiante = Coordinate.Parse(input.ToUpper());
         _gameManager.BoardState.Board.PlaceMark(parsedCoordiante, _gameManager.LocalPlayer.AssignedMark);
+        _gameManager.BoardState.Board.ShowBoard();
+        
+        if (_gameManager.BoardState.Board.HasWinner() )
+        {
+            _consoleService.SystemMessage(GameScreen.InGameScreen, "Game over. <insert> wins. Type \"back\" to go back to the menu.");
+        }
+        
+        if (_gameManager.BoardState.Board.HasDraw())
+        {
+            _consoleService.SystemMessage(GameScreen.InGameScreen, "Game over. Type \"back\" to go back to the menu.");
+        }
     }
 
     public void OnEntry()
     {
+        // If online game, ask server for the board state
+        // Else, create a new board state
+        _gameManager.BoardState = new BoardState();
+        
         _consoleService.SystemMessage(GameScreen.InGameScreen ,"Type \"back\" to go back to the menu.");
+        
+        _gameManager.BoardState.Board.ShowBoard();
     }
 
     public void OnExit()

@@ -1,3 +1,4 @@
+using NoughtsAndCrosses.Core.Enum;
 using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Domain.GameScreens;
@@ -14,16 +15,19 @@ public class JoinGameScreen : IScreen
     
     public void HandleInputs(string input)
     {
-        throw new NotImplementedException();
+        _consoleService.SystemMessage(GameScreen.JoinGame, $"You typed {input}");
+        // throw new NotImplementedException();
     }
 
     public void OnEntry()
     {
-        throw new NotImplementedException();
+        _consoleService.SystemMessage(GameScreen.JoinGame, "Enter the lobby code to join the game");
+        // throw new NotImplementedException();
     }
 
     public void OnExit()
     {
-        throw new NotImplementedException();
+        _consoleService.SystemMessage(GameScreen.JoinGame, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
+        // throw new NotImplementedException();
     }
 }
