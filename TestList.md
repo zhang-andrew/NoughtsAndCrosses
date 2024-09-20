@@ -16,11 +16,18 @@
 - [ ] App recognises who is the current player's turn.
 
 # ConsoleApp Tests
-- [ ] Provide options to start a new game locally (against a computer/against another player) or online (against another player)
+- [x] Provide options to start a new game locally (against a computer/against another player) or online (against another player)
 - [ ] Persist game state locally (client-side)
-- [ ] Be able to consume Console commands and be connected to a WebSocket server
+- [x] Be able to consume Console commands and be connected to a WebSocket server
 - [ ] Receive WebSocket messages and react accordingly
-- [ ] Offline mode
+- 
+- [ ] When a winner is announced, the game should end and the winner should be displayed
+- [ ] When a draw is announced, the game should end and a draw should be displayed
+- [ ] When a player makes a move, the game state should be updated and displayed
+- [ ] When a player makes a move, the game state should be updated and displayed (Online)
+- [ ] When the game has ended, options to start a new game should be displayed
+- [ ] When the game has ended, all coordinate commands should be disabled
+- [ ] If a rematch is requested, the game should reset and start again
 
 # WebSocketServer Tests
 - [ ] Handle multiple connections
