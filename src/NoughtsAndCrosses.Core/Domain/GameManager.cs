@@ -8,29 +8,29 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class GameManager
 {
-    private AppState _appState = AppState.Menu;
+    public GameScreen GameScreen { get; private set;} = GameScreen.Menu;
     public Player? LocalPlayer = null;
     
     private ConsoleService _consoleService;
     
-    public GameState? GameState = null;
+    public BoardState? BoardState = null;
 
 
     public GameManager()
     {
         _consoleService = new ConsoleService();
         
-        GameState = new GameState();
+        BoardState = new BoardState();
     }
 
     public async void Run()
     {
-        _consoleService.SystemMessage(_appState, "Welcome to Noughts and Crosses");
-        _consoleService.SystemMessage(_appState, "1 - New offline game, 2 - New online game, 3 - Join online game");
+        _consoleService.SystemMessage(GameScreen, "Welcome to Noughts and Crosses");
+        _consoleService.SystemMessage(GameScreen, "1 - New offline game, 2 - New online game, 3 - Join online game");
 
         await ListenForInputs();
     }
-
+    
     private async Task ListenForInputs()
     {
         while (true)
@@ -41,23 +41,12 @@ public class GameManager
             
                 if (input == "exit")
                 {
-                    _consoleService.SystemMessage(_appState, "Exiting...");
+                    _consoleService.SystemMessage(GameScreen, "Exiting...");
                     break; // immediately exit the loop
                 }
-            
-                switch (_appState)
-                {
-                    case AppState.Menu:
-                        HandleMenuInput(input);
-                        break;
-                    case AppState.OfflineGame:
-                    case AppState.Lobby:
-                        HandleGameInput(input);
-                        break;
-                    default:
-                        _consoleService.SystemMessage(_appState, "Invalid application state.");
-                        break;
-                }
+                
+                HandleInput(input);
+                
             }
             catch (Exception e)
             {
@@ -66,16 +55,31 @@ public class GameManager
         }
     }
 
-
+    public void HandleInput(string input)
+    {
+        switch (GameScreen)
+        {
+            case GameScreen.Menu:
+                HandleMenuInput(input);
+                break;
+            case GameScreen.OfflineGame:
+            case GameScreen.Lobby:
+                HandleGameInput(input);
+                break;
+            default:
+                _consoleService.SystemMessage(GameScreen, "Invalid application state.");
+                break;
+        }
+    }
     
-    public void HandleMenuInput(string input)
+    private void HandleMenuInput(string input)
     {
         switch (input)
         {
-            case "1":
+            case MenuCommands.GoToOfflineGameScreen:
                 NewOfflineGame();
                 break;
-            case "2":
+            case MenuCommands.GoToLobbyScreen:
                 NewOnlineGame("ws://localhost:5148/ws");
                 break;
             case "3":
@@ -84,11 +88,8 @@ public class GameManager
         }
     }
     
-    
-    public void HandleGameInput(string input)
+    private void HandleGameInput(string input)
     {
-        // try
-        // {
         if (LocalPlayer == null)
         {
             // Assign mark randomly
@@ -99,32 +100,18 @@ public class GameManager
             LocalPlayer = new Player(randomMark);
         }
         
-        // if (input.Length != 2)
-        //     throw new Exception("Invalid coordinate");
-        //
         Coordinate parsedCoordiante = Coordinate.Parse(input.ToUpper());
-        
-        GameState.Board.PlaceMark(parsedCoordiante, LocalPlayer.AssignedMark);
-        
-        // catch (Exception e)
-        // {
-            // _consoleService.SystemMessage(AppState, e.Message);
-            // Console.WriteLine(e);
-        //     throw;
-        // }
+        BoardState.Board.PlaceMark(parsedCoordiante, LocalPlayer.AssignedMark);
     }
-    
- 
-    
-    public void NewOfflineGame()
+
+    private void NewOfflineGame()
     {
-        ChangeAppState(AppState.OfflineGame);
-        
+        ChangeScreen(GameScreen.OfflineGame);
     }
-    
-    public async Task NewOnlineGame(string serverUri)
+
+    private async Task NewOnlineGame(string serverUri)
     {
-        ChangeAppState(AppState.Lobby);
+        ChangeScreen(GameScreen.Lobby);
         
         var playerClient = new PlayerClient(_consoleService);
         
@@ -143,22 +130,22 @@ public class GameManager
         });
     }
     
-    private void ChangeAppState(AppState newState)
+    public void ChangeScreen(GameScreen newMode)
     {
         string stateName;
-        _appState = newState;
+        GameScreen = newMode;
         
-        switch (_appState)
+        switch (GameScreen)
         {
-            case AppState.OfflineGame:
+            case GameScreen.OfflineGame:
                 stateName = "Game (Offline)";
                 break;
             default:
-                stateName = _appState.ToString();
+                stateName = GameScreen.ToString();
                 break;
         }
         
-        _consoleService.SystemMessage(_appState, $"Navigated to \"{stateName}\".");
+        _consoleService.SystemMessage(GameScreen, $"Navigated to \"{stateName}\".");
     }
     
     public void CreateLocalPlayer(Mark mark)

@@ -6,9 +6,9 @@ namespace NoughtsAndCrosses.Core.Service;
 
 public class ConsoleService
 {
-    public void SystemMessage(AppState appState, string message)
+    public void SystemMessage(GameScreen gameScreen, string message)
     {
-        Console.WriteLine($"[System][{appState}] {message}");
+        Console.WriteLine($"[System][{gameScreen}] {message}");
     }
     
     /* Unhandled exception messages */

@@ -21,7 +21,7 @@ public class BoardSpecifications
         
         
         // Assert
-        gameManager.GameState.Board.Spaces.Length.Should().Be(9);
+        gameManager.BoardState.Board.Spaces.Length.Should().Be(9);
     }
     
     [Fact]
@@ -35,7 +35,7 @@ public class BoardSpecifications
             Console.SetOut(consoleOutput);
             
             // Act
-            gameManager.GameState.Board.ShowBoard();
+            gameManager.BoardState.Board.ShowBoard();
 
             // Assert
             var expectedOutput = "3 [ ][ ][ ]\n2 [ ][ ][ ]\n1 [ ][ ][ ]\n";
@@ -57,10 +57,10 @@ public class BoardSpecifications
         var gameManager = new GameManager();
         
         // Act
-        gameManager.GameState.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
 
         // Assert
-        gameManager.GameState.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
+        gameManager.BoardState.Board.Spaces.First(s => s.Coordinate.Value == $"{fileLetter}{(int)rankNumber}").Mark.Should().Be(mark);
     }
     
     [Fact]
@@ -70,8 +70,8 @@ public class BoardSpecifications
         var gameManager = new GameManager();
         
         // Act
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
-        Action act = () => gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.O);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
+        Action act = () => gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.O);
         
         // Assert
         act.Should().Throw<Exception>().WithMessage("Space is already occupied");
@@ -88,11 +88,11 @@ public class BoardSpecifications
         // Act
         foreach (string coordinate in coordinates)
         {
-            gameManager.GameState.Board.PlaceMark(Coordinate.Parse(coordinate), Mark.X);
+            gameManager.BoardState.Board.PlaceMark(Coordinate.Parse(coordinate), Mark.X);
         }
         
         // Assert
-        gameManager.GameState.Board.HasWinner().Should().BeTrue();
+        gameManager.BoardState.Board.HasWinner().Should().BeTrue();
     }
     
     [Fact]
@@ -102,18 +102,18 @@ public class BoardSpecifications
         var gameManager = new GameManager();
         
         // Act
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 2), Mark.X);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.A, 3), Mark.O);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.B, 1), Mark.O);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.B, 2), Mark.O);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.B, 3), Mark.X);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.C, 1), Mark.X);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.C, 2), Mark.O);
-        gameManager.GameState.Board.PlaceMark(new Coordinate(FileLetter.C, 3), Mark.X);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.A, 2), Mark.X);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.A, 3), Mark.O);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.B, 1), Mark.O);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.B, 2), Mark.O);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.B, 3), Mark.X);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.C, 1), Mark.X);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.C, 2), Mark.O);
+        gameManager.BoardState.Board.PlaceMark(new Coordinate(FileLetter.C, 3), Mark.X);
         
         // Assert
-        gameManager.GameState.Board.HasWinner().Should().BeFalse();
-        gameManager.GameState.Board.HasDraw().Should().BeTrue();
+        gameManager.BoardState.Board.HasWinner().Should().BeFalse();
+        gameManager.BoardState.Board.HasDraw().Should().BeTrue();
     }
 }

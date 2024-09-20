@@ -17,11 +17,13 @@ public class InputSpecifications
     {
         // Arrange
         var gameManager = new GameManager();
+        
+        gameManager.ChangeScreen(GameScreen.OfflineGame);
         gameManager.CreateLocalPlayer(markType);
         
         // Act
-        gameManager.HandleGameInput(input); // triggers the method that places the mark on the board
-        Space affectedSpace = gameManager.GameState.Board.GetSpace(input); 
+        gameManager.HandleInput(input); // triggers the method that places the mark on the board
+        Space affectedSpace = gameManager.BoardState.Board.GetSpace(input); 
         
         // Assert
         affectedSpace.Mark.Should().Be(gameManager.LocalPlayer.AssignedMark);
@@ -34,12 +36,12 @@ public class InputSpecifications
     public void Should_throw_exception_if_coordinate_input_is_invalid(Mark markType, string input)
     {
         // Arrange
-        
         var gameManager = new GameManager();
+        gameManager.ChangeScreen(GameScreen.OfflineGame);
         gameManager.CreateLocalPlayer(markType);
         
         // Act
-        Action act = () => gameManager.HandleGameInput(input);
+        Action act = () => gameManager.HandleInput(input);
         
         // Assert
         // act.Should().Throw<Exception>().WithMessage("Invalid coordinate");
@@ -47,5 +49,25 @@ public class InputSpecifications
         act.Should().Throw<Exception>();
     }
     
-    
+ 
+    [Fact]
+    public void Should_change_screens_with_goto_commands_in_menu()
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        gameManager.ChangeScreen(GameScreen.Menu);
+        
+        // Act
+        gameManager.HandleInput(MenuCommands.GoToLobbyScreen);
+        // gameManager.HandleInput("2");
+        // gameManager.HandleInput("3");
+        
+        // Assert
+        gameManager.GameScreen.Should().Be(GameScreen.Lobby);
+    }
+
+
+    public void Should_accept_menu_commands_in_menu()
+    {
+    }
 }

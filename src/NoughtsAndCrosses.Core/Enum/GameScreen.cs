@@ -1,6 +1,6 @@
 namespace NoughtsAndCrosses.Core.Enum;
 
-public enum AppState
+public enum GameScreen
 {
     Menu,
     OfflineGame,

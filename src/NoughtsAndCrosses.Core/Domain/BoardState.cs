@@ -1,10 +1,10 @@
 namespace NoughtsAndCrosses.Core.Domain;
 
-public class GameState
+public class BoardState
 {
     public Board Board { get; }
     
-    public GameState()
+    public BoardState()
     {
         Board = new Board();       
     }
