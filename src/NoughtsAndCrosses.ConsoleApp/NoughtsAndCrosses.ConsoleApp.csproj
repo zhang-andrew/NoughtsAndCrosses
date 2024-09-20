@@ -11,8 +11,4 @@
     <ProjectReference Include="..\NoughtsAndCrosses.Core\NoughtsAndCrosses.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
-
 </Project>
