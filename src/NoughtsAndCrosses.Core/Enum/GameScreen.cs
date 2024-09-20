@@ -3,7 +3,7 @@ namespace NoughtsAndCrosses.Core.Enum;
 public enum GameScreen
 {
     Menu,
-    InGameScreen,
+    InGame,
     HostGame,
     JoinGame
 }

@@ -4,7 +4,7 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public static class MenuCommand
 {
-    public const string GoToOfflineGameScreen = "1";
-    public const string GoToHostScreen = "2";
-    public const string GoToJoinOnlineGame = "3";
+    public const string GoToInGame = "1";
+    public const string GoToHostGame = "2";
+    public const string GoToJoinGame = "3";
 }

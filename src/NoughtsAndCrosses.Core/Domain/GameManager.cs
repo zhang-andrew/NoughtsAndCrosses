@@ -30,7 +30,7 @@ public class GameManager
             { GameScreen.Menu, new MenuScreen(this) },
             { GameScreen.HostGame, new HostGameScreen(this) },
             { GameScreen.JoinGame, new JoinGameScreen(this) },
-            { GameScreen.InGameScreen, new InGameScreen(this) },
+            { GameScreen.InGame, new InGameScreen(this) },
         };
     }
 

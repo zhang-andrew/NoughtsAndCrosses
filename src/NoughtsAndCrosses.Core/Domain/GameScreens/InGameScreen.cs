@@ -31,12 +31,12 @@ public class InGameScreen : IScreen
         
         if (_gameManager.BoardState.Board.HasWinner() )
         {
-            _consoleService.SystemMessage(GameScreen.InGameScreen, "Game over. <insert> wins. Type \"back\" to go back to the menu.");
+            _consoleService.SystemMessage(GameScreen.InGame, "Game over. <insert> wins. Type \"back\" to go back to the menu.");
         }
         
         if (_gameManager.BoardState.Board.HasDraw())
         {
-            _consoleService.SystemMessage(GameScreen.InGameScreen, "Game over. Type \"back\" to go back to the menu.");
+            _consoleService.SystemMessage(GameScreen.InGame, "Game over. Type \"back\" to go back to the menu.");
         }
 
         return true;
@@ -48,13 +48,13 @@ public class InGameScreen : IScreen
         // Else, create a new board state
         _gameManager.BoardState = new BoardState();
         
-        _consoleService.SystemMessage(GameScreen.InGameScreen ,"Type \"back\" to go back to the menu.");
+        _consoleService.SystemMessage(GameScreen.InGame ,"Type \"back\" to go back to the menu.");
         
         _gameManager.BoardState.Board.ShowBoard();
     }
 
     public void OnExit()
     {
-        _consoleService.SystemMessage(GameScreen.InGameScreen, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
+        _consoleService.SystemMessage(GameScreen.InGame, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
     }
 }
