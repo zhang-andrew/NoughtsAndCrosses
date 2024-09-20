@@ -18,7 +18,7 @@ public class MenuScreen : IScreen
         switch (input)
         {
             case MenuCommand.GoToOfflineGameScreen:
-                _gameManager.ChangeScreen(GameScreen.OfflineGame);
+                _gameManager.ChangeScreen(GameScreen.InGameScreen);
                 break;
             case MenuCommand.GoToHostScreen:
                 _gameManager.ChangeScreen(GameScreen.HostGame);

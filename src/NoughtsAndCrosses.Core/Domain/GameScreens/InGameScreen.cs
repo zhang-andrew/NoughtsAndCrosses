@@ -3,12 +3,12 @@ using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Domain.GameScreens;
 
-public class OfflineGameScreen : IScreen
+public class InGameScreen : IScreen
 {
     private ConsoleService _consoleService = new ConsoleService();
     private GameManager _gameManager;
 
-    public OfflineGameScreen(GameManager gameManager)
+    public InGameScreen(GameManager gameManager)
     {
         _gameManager = gameManager;
     }
@@ -31,11 +31,11 @@ public class OfflineGameScreen : IScreen
 
     public void OnEntry()
     {
-        _consoleService.SystemMessage(GameScreen.OfflineGame ,"Type \"back\" to go back to the menu.");
+        _consoleService.SystemMessage(GameScreen.InGameScreen ,"Type \"back\" to go back to the menu.");
     }
 
     public void OnExit()
     {
-        _consoleService.SystemMessage(GameScreen.OfflineGame, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
+        _consoleService.SystemMessage(GameScreen.InGameScreen, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
     }
 }

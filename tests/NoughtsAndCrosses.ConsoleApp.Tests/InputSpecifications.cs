@@ -19,7 +19,7 @@ public class InputSpecifications
         // Arrange
         var gameManager = new GameManager();
         
-        gameManager.ChangeScreen(GameScreen.OfflineGame);
+        gameManager.ChangeScreen(GameScreen.InGameScreen);
         gameManager.CreateLocalPlayer(markType);
         
         // Act
@@ -38,7 +38,7 @@ public class InputSpecifications
     {
         // Arrange
         var gameManager = new GameManager();
-        gameManager.ChangeScreen(GameScreen.OfflineGame);
+        gameManager.ChangeScreen(GameScreen.InGameScreen);
         gameManager.CreateLocalPlayer(markType);
         
         // Act
@@ -67,8 +67,7 @@ public class InputSpecifications
     }
     
     [Theory]
-    [InlineData(GameScreen.OfflineGame)]
-    [InlineData(GameScreen.OnlineGame)]
+    [InlineData(GameScreen.InGameScreen)]
     [InlineData(GameScreen.HostGame)]
     public void Should_go_back_to_menu_when_back_command_is_given(GameScreen gameScreen)
     {
