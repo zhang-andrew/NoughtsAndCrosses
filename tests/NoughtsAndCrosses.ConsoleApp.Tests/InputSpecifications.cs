@@ -1,6 +1,7 @@
 using FluentAssertions;
 // using NoughtsAndCrosses.ConsoleApp.Domain;
 using NoughtsAndCrosses.Core;
+using NoughtsAndCrosses.Core.Constant;
 using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Enum;
 
@@ -51,6 +52,21 @@ public class InputSpecifications
     
  
     [Fact]
+    public void Should_close_game_when_close_command_is_given()
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        gameManager.ChangeScreen(GameScreen.Menu); // TODO: should take any screen
+        
+        // Act
+        gameManager.HandleInput(GeneralCommand.CloseApplication);
+        
+        // Assert
+        gameManager.ListeningForInputs.Should().BeFalse();
+
+    }
+    
+    [Fact]
     public void Should_change_screens_with_goto_commands_in_menu()
     {
         // Arrange
@@ -58,7 +74,7 @@ public class InputSpecifications
         gameManager.ChangeScreen(GameScreen.Menu);
         
         // Act
-        gameManager.HandleInput(MenuCommands.GoToLobbyScreen);
+        gameManager.HandleInput(MenuCommand.GoToLobbyScreen);
         // gameManager.HandleInput("2");
         // gameManager.HandleInput("3");
         

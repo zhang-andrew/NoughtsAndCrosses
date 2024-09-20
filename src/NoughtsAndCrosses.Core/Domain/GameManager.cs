@@ -1,6 +1,7 @@
 // using NoughtsAndCrosses.Core.Service;
 
 using System.Runtime.InteropServices.JavaScript;
+using NoughtsAndCrosses.Core.Constant;
 using NoughtsAndCrosses.Core.Enum;
 using NoughtsAndCrosses.Core.Service;
 
@@ -9,11 +10,14 @@ namespace NoughtsAndCrosses.Core.Domain;
 public class GameManager
 {
     public GameScreen GameScreen { get; private set;} = GameScreen.Menu;
+
     public Player? LocalPlayer = null;
     
-    private ConsoleService _consoleService;
-    
     public BoardState? BoardState = null;
+    
+    private ConsoleService _consoleService;
+
+    public bool ListeningForInputs;
 
 
     public GameManager()
@@ -33,20 +37,20 @@ public class GameManager
     
     private async Task ListenForInputs()
     {
-        while (true)
+        ListeningForInputs = true;
+        
+        while (ListeningForInputs)
         {
             try
             {
                 string? input = Console.ReadLine();
-            
-                if (input == "exit")
-                {
-                    _consoleService.SystemMessage(GameScreen, "Exiting...");
-                    break; // immediately exit the loop
-                }
                 
                 HandleInput(input);
                 
+                if (ListeningForInputs == false)
+                {
+                    break;
+                }
             }
             catch (Exception e)
             {
@@ -57,6 +61,13 @@ public class GameManager
 
     public void HandleInput(string input)
     {
+        if (input == GeneralCommand.CloseApplication)
+        {
+            _consoleService.SystemMessage(GameScreen, "Exiting...");
+            ListeningForInputs = false;
+            return;
+        }
+        
         switch (GameScreen)
         {
             case GameScreen.Menu:
@@ -76,10 +87,10 @@ public class GameManager
     {
         switch (input)
         {
-            case MenuCommands.GoToOfflineGameScreen:
+            case MenuCommand.GoToOfflineGameScreen:
                 NewOfflineGame();
                 break;
-            case MenuCommands.GoToLobbyScreen:
+            case MenuCommand.GoToLobbyScreen:
                 NewOnlineGame("ws://localhost:5148/ws");
                 break;
             case "3":
