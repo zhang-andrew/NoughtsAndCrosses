@@ -69,7 +69,7 @@ public class InputSpecifications
     [Theory]
     [InlineData(GameScreen.OfflineGame)]
     [InlineData(GameScreen.OnlineGame)]
-    [InlineData(GameScreen.Lobby)]
+    [InlineData(GameScreen.HostGame)]
     public void Should_go_back_to_menu_when_back_command_is_given(GameScreen gameScreen)
     {
         // Arrange
@@ -80,7 +80,7 @@ public class InputSpecifications
         gameManager.HandleInput(GeneralCommand.Back);
         
         // Assert
-        gameManager.GameScreen.Should().Be(GameScreen.Menu);
+        gameManager.CurrentScreen.Should().Be(GameScreen.Menu);
     }
     
     [Fact]
@@ -91,12 +91,12 @@ public class InputSpecifications
         gameManager.ChangeScreen(GameScreen.Menu);
         
         // Act
-        gameManager.HandleInput(MenuCommand.GoToLobbyScreen);
+        gameManager.HandleInput(MenuCommand.GoToHostScreen);
         // gameManager.HandleInput("2");
         // gameManager.HandleInput("3");
         
         // Assert
-        gameManager.GameScreen.Should().Be(GameScreen.Lobby);
+        gameManager.CurrentScreen.Should().Be(GameScreen.HostGame);
     }
 
 

@@ -2,6 +2,7 @@
 
 using System.Runtime.InteropServices.JavaScript;
 using NoughtsAndCrosses.Core.Constant;
+using NoughtsAndCrosses.Core.Domain.GameScreens;
 using NoughtsAndCrosses.Core.Enum;
 using NoughtsAndCrosses.Core.Infrastructure;
 using NoughtsAndCrosses.Core.Service;
@@ -10,7 +11,7 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class GameManager
 {
-    public GameScreen GameScreen { get; private set;} = GameScreen.Menu;
+    public GameScreen CurrentScreen { get; private set;}
 
     public Player? LocalPlayer = null;
     
@@ -20,19 +21,26 @@ public class GameManager
 
     public bool IsListeningForInputs;
 
-
+    private Dictionary<GameScreen, IScreen> _screens;
+    
+    
     public GameManager()
     {
         _consoleService = new ConsoleService();
         
         BoardState = new BoardState();
+        
+        _screens = new ()
+        {
+            {GameScreen.Menu, new MenuScreen(this)},
+            {GameScreen.OfflineGame, new OfflineGameScreen(this)}
+        };
     }
 
     public async void Run()
     {
-        _consoleService.SystemMessage(GameScreen, "Welcome to Noughts and Crosses");
-        _consoleService.SystemMessage(GameScreen, "1 - New offline game, 2 - New online game, 3 - Join online game");
-
+        CurrentScreen = GameScreen.Menu;
+        _screens[CurrentScreen].OnEntry();
         await ListenForInputs();
     }
     
@@ -64,12 +72,12 @@ public class GameManager
     {
         if (input == GeneralCommand.CloseApplication)
         {
-            _consoleService.SystemMessage(GameScreen, "Exiting...");
+            _consoleService.SystemMessage(CurrentScreen, "Exiting...");
             IsListeningForInputs = false;
             return;
         }
         
-        if (GameScreen != GameScreen.Menu)
+        if (CurrentScreen != GameScreen.Menu)
         {
             if (input == GeneralCommand.Back)
             {
@@ -77,22 +85,28 @@ public class GameManager
                 return;
             }
         }
-
-        switch (GameScreen)
-        {
-            case GameScreen.Menu:
-                HandleMenuInput(input);
-                break;
-            case GameScreen.OfflineGame:
-            case GameScreen.OnlineGame:
-                HandleGameInput(input);
-                break;
-            case GameScreen.Lobby:
-                break;
-            default:
-                _consoleService.SystemMessage(GameScreen, "Invalid application state.");
-                break;
-        }
+        
+        _screens[CurrentScreen].HandleInputs(input);
+        
+        /* Commented out: Refactoring in progress
+         * Replacing switch statement with IScreen.HandleInputs method
+         * The correct handling is based on the current screen
+         */
+        // switch (CurrentScreen)
+        // {
+        //     case GameScreen.Menu:
+        //         HandleMenuInput(input);
+        //         break;
+        //     case GameScreen.OfflineGame:
+        //     case GameScreen.OnlineGame:
+        //         HandleGameInput(input);
+        //         break;
+        //     case GameScreen.HostGame:
+        //         break;
+        //     default:
+        //         _consoleService.SystemMessage(CurrentScreen, "Invalid application state.");
+        //         break;
+        // }
     }
     
     private void HandleMenuInput(string input)
@@ -102,15 +116,15 @@ public class GameManager
             case MenuCommand.GoToOfflineGameScreen:
                 NewOfflineGame();
                 break;
-            case MenuCommand.GoToLobbyScreen:
+            case MenuCommand.GoToHostScreen:
                 NewOnlineGame("ws://localhost:5148/ws");
                 break;
-            case "3":
-                // JoinOnlineGame("ws://localhost:5148/ws", "gameId");
+            case MenuCommand.GoToJoinOnlineGame:
+                JoinOnlineGame("ws://localhost:5148/ws", "gameId");
                 break;
         }
     }
-    
+
     private void HandleGameInput(string input)
     {
         if (LocalPlayer == null)
@@ -134,7 +148,7 @@ public class GameManager
 
     private async Task NewOnlineGame(string serverUri)
     {
-        ChangeScreen(GameScreen.Lobby);
+        ChangeScreen(GameScreen.HostGame);
         
         var playerClient = new PlayerClient(_consoleService);
         
@@ -153,22 +167,22 @@ public class GameManager
         });
     }
     
+    
+    private void JoinOnlineGame(string wsLocalhostWs, string gameid)
+    {
+        ChangeScreen(GameScreen.HostGame);
+
+        throw new NotImplementedException();
+    }
+
+    
     public void ChangeScreen(GameScreen newMode)
     {
-        string stateName;
-        GameScreen = newMode;
+        _screens[CurrentScreen].OnExit();
         
-        switch (GameScreen)
-        {
-            case GameScreen.OfflineGame:
-                stateName = "Game (Offline)";
-                break;
-            default:
-                stateName = GameScreen.ToString();
-                break;
-        }
-        
-        _consoleService.SystemMessage(GameScreen, $"Navigated to \"{stateName}\".");
+        CurrentScreen = newMode;
+        _consoleService.SystemMessage(CurrentScreen, $"Navigated to \"{CurrentScreen}\".");
+        _screens[CurrentScreen].OnEntry();
     }
     
     public void CreateLocalPlayer(Mark mark)
