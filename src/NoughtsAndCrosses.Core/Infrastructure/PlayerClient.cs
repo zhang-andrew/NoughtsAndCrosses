@@ -2,7 +2,7 @@ using System.Net.WebSockets;
 using System.Text;
 using NoughtsAndCrosses.Core.Service;
 
-namespace NoughtsAndCrosses.Core.Domain;
+namespace NoughtsAndCrosses.Core.Infrastructure;
 
 public class PlayerClient
 {
