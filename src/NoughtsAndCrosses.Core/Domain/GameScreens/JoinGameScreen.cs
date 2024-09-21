@@ -6,16 +6,16 @@ namespace NoughtsAndCrosses.Core.Domain.GameScreens;
 public class JoinGameScreen : IScreen
 {
     private ConsoleService _consoleService = new ConsoleService();
-    private GameManager _gameManager;
+    private AppManager _appManager;
 
-    public JoinGameScreen(GameManager gameManager)
+    public JoinGameScreen(AppManager appManager)
     {
-        _gameManager = gameManager;
+        _appManager = appManager;
     }
     
     public bool HandleInput(string input)
     {
-        _consoleService.SystemMessage(GameScreen.JoinGame, $"You typed {input}");
+        _consoleService.SystemMessage( $"You typed {input}");
         
         // Check if input is a valid lobby code
         // Else false
@@ -24,13 +24,11 @@ public class JoinGameScreen : IScreen
 
     public void OnEntry()
     {
-        _consoleService.SystemMessage(GameScreen.JoinGame, "Enter the lobby code to join the game");
-        // throw new NotImplementedException();
+        _consoleService.SystemMessage( "Enter the \"Lobby Code\" to join game");
     }
 
     public void OnExit()
     {
-        _consoleService.SystemMessage(GameScreen.JoinGame, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
-        // throw new NotImplementedException();
+        //
     }
 }

@@ -9,19 +9,21 @@ public class InGameScreen : IScreen
 {
     private ConsoleService _consoleService = new ConsoleService();
     private GameManager _gameManager;
+    private AppManager _appManager;
 
     private string[] _allowedCommands;
 
-    public InGameScreen(GameManager gameManager)
+    public InGameScreen(AppManager appManager)
     {
-        _gameManager = gameManager;
+        _appManager = appManager;
+        _gameManager = new GameManager();
         // _allowedCommands = new string[] { InGameCommand.Restart, GeneralCommand.Back };
     }
     
     public bool HandleInput(string input)
     {
         Board board = _gameManager.Board;
-
+        
         if (board.HasWinner() || board.HasDraw())
         {
             if (input == InGameCommand.Restart)
@@ -35,19 +37,17 @@ public class InGameScreen : IScreen
             {
                 ShowEndGameMessage();
             }
-
             return true;
         }
         
-        
-        if (board.Spaces.All(s => s.Mark == Mark.Empty) && _gameManager.LocalPlayer.AssignedMark == Mark.O)
+        if (board.Spaces.All(s => s.Mark == Mark.Empty) && _gameManager.ClientPlayer.AssignedMark == Mark.O)
         {
             Console.WriteLine("X goes first.");
             return true;
         }
-
+        
         Coordinate parsedCoordinate = Coordinate.Parse(input.ToUpper());
-        _gameManager.Board.PlaceMark(parsedCoordinate, _gameManager.LocalPlayer.AssignedMark);
+        _gameManager.Board.PlaceMark(parsedCoordinate, _gameManager.ClientPlayer.AssignedMark);
         
         if (_gameManager.Board.HasWinner() || _gameManager.Board.HasDraw())
         {
@@ -56,7 +56,7 @@ public class InGameScreen : IScreen
         }
         else
         {
-            var oppositeMark = _gameManager.LocalPlayer.AssignedMark == Mark.X ? Mark.O : Mark.X;
+            var oppositeMark = _gameManager.ClientPlayer.AssignedMark == Mark.X ? Mark.O : Mark.X;
             _gameManager.Board.PlaceMarkRandomly(oppositeMark);
             _gameManager.Board.ShowBoard();
         }
@@ -67,15 +67,17 @@ public class InGameScreen : IScreen
 
     public void OnEntry()
     {
-        _gameManager.Board = new Board();
-        AssignRandomMarkToPlayer();
-        ComputerMovesFirstIfCrosses();
+        _gameManager.StartGame();
+        
+        // _gameManager.Board = new Board();
+        // AssignRandomMarkToPlayer();
+        // ComputerMovesFirstIfCrosses();
 
         // If online game, ask server for the board state
         // Else, create a new board state
         
         // string allowedCommands = string.Join("\", \"", _allowedCommands);
-        _consoleService.SystemMessage(GameScreen.InGame ,$"Type the coordinate to place your mark. Type \"back\" to go back.");
+        _consoleService.SystemMessage($"Type the coordinate to place your mark. Type \"back\" to go back.");
         
         _gameManager.Board.ShowBoard();
     }
@@ -83,7 +85,7 @@ public class InGameScreen : IScreen
     private void ComputerMovesFirstIfCrosses()
     {
         // Computer moves if player is assigned Naught
-        if (_gameManager.LocalPlayer.AssignedMark == Mark.O)
+        if (_gameManager.ClientPlayer.AssignedMark == Mark.O)
         {
             _gameManager.Board.PlaceMarkRandomly(Mark.X);
         }
@@ -95,19 +97,19 @@ public class InGameScreen : IScreen
         Random random = new Random();
         int randomInt = random.Next(0, 2);
         Mark randomMark = randomInt == 0 ? Mark.O : Mark.X;
-        _gameManager.LocalPlayer = new Player(randomMark);
-        _consoleService.SystemMessage(GameScreen.InGame, $"You are assigned \"{_gameManager.LocalPlayer.AssignedMark}\"");
+        _gameManager.ClientPlayer = new Player(randomMark);
+        _consoleService.SystemMessage( $"You are assigned \"{_gameManager.ClientPlayer.AssignedMark}\"");
     }
 
     public void OnExit()
     {
-        _consoleService.SystemMessage(GameScreen.InGame, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
+        //
     }
     
     private void ShowEndGameMessage()
     {
         // Show message based on the game result
-        _consoleService.SystemMessage(GameScreen.InGame, $"Game over. \"{_gameManager.Board.GetWinner()}\" wins.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
+        _consoleService.SystemMessage( $"Game over. \"{_gameManager.Board.GetWinner()}\" wins.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
         
     }
 }

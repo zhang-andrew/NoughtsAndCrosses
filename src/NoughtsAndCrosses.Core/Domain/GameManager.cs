@@ -1,110 +1,76 @@
-// using NoughtsAndCrosses.Core.Service;
-
-using System.Runtime.InteropServices.JavaScript;
-using NoughtsAndCrosses.Core.Constant;
 using NoughtsAndCrosses.Core.Domain.GameScreens;
 using NoughtsAndCrosses.Core.Enum;
-using NoughtsAndCrosses.Core.Infrastructure;
-using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Domain;
 
 public class GameManager
 {
-    public GameScreen CurrentScreen { get; private set;}
-    public Player? LocalPlayer;
-    public Board? Board;
-    public bool IsListeningForInputs;
-    
-    private ConsoleService _consoleService;
-    public Dictionary<GameScreen, IScreen> Screens;
+    public Board Board;
+    private List<Player> _players = new() { };
+    public Player ClientPlayer; // The player that is playing on the local machine
+    public Player TurnPlayer;
     
     public GameManager()
     {
-        _consoleService = new ConsoleService();
-        
+    }
+
+    public void StartGame(Mark? clientAssignedMark = null)
+    {
         Board = new Board();
         
-        Screens = new ()
+        // First handle the client player
+        if (System.Enum.TryParse(clientAssignedMark.ToString(), out Mark mark))
         {
-            { GameScreen.Menu, new MenuScreen(this) },
-            { GameScreen.HostGame, new HostGameScreen(this) },
-            { GameScreen.JoinGame, new JoinGameScreen(this) },
-            { GameScreen.InGame, new InGameScreen(this) },
-        };
+            ClientPlayer = new Player(mark);
+        } else
+        {
+            Random random = new Random();
+            ClientPlayer = new Player(random.Next(0, 2) == 0 ? Mark.X : Mark.O);
+        }
+        _players.Add(ClientPlayer);
+        
+        // Then handle the other player
+        Mark opponentMark = ClientPlayer.AssignedMark == Mark.X ? Mark.O : Mark.X;
+        Player opponentPlayer = new Player(opponentMark);
+        _players.Add(opponentPlayer);
+        
+        // Assign the X player to go first
+        TurnPlayer = _players.First(p => p.AssignedMark == Mark.X); // X always goes first
+
+        // Notify the client player of their mark
+        ClientPlayer.NotifyPlayerMark();
     }
 
-    public async void Run()
+    public void HostGame()
     {
-        CurrentScreen = GameScreen.Menu;
-        Screens[CurrentScreen].OnEntry();
-        await ListenForInputs();
     }
-    
-    private async Task ListenForInputs()
+
+    public void JoinGame()
     {
-        IsListeningForInputs = true;
-        
-        while (IsListeningForInputs)
+        ClientPlayer.NotifyPlayerMark();
+    }
+
+    public void NextTurn()
+    {
+        TurnPlayer = TurnPlayer == _players[0] ? _players[1] : _players[0];
+    }
+
+    public void HandleTurn()
+    {
+        // Broadcast messages
+        foreach (var player in _players)
         {
-            try
+            if (player == ClientPlayer)
             {
-                string? input = Console.ReadLine();
-                
-                HandleInput(input);
-                
-                if (IsListeningForInputs == false)
-                {
-                    break;
-                }
+                player.IsTheirTurn = true;
+                player.NotifyTurn();
             }
-            catch (Exception e)
+            else
             {
-                _consoleService.UnhandledExceptionMessage(e);
+                player.IsTheirTurn = false;
+                player.NotifyWait();
             }
         }
     }
 
-    public void HandleInput(string input)
-    {
-        // Handle close command
-        if (input == GeneralCommand.CloseApplication)
-        {
-            _consoleService.SystemMessage(CurrentScreen, "Exiting...");
-            IsListeningForInputs = false;
-            return;
-        }
-        
-        // Handle back command
-        if (CurrentScreen != GameScreen.Menu)
-        {
-            if (input == GeneralCommand.Back)
-            {
-                ChangeScreen(GameScreen.Menu);
-                return;
-            }
-        }
-        
-        // Handle screen-specific commands
-        bool wasHandled = Screens[CurrentScreen].HandleInput(input);
-        
-        // Handle invalid command
-        if (!wasHandled)
-            _consoleService.SystemMessage(CurrentScreen, "Invalid command.");
-    }
-    
-    public void ChangeScreen(GameScreen newMode)
-    {
-        Screens[CurrentScreen].OnExit();
-        
-        CurrentScreen = newMode;
-        _consoleService.SystemMessage(CurrentScreen, $"Navigated to \"{CurrentScreen}\".");
-        
-        Screens[CurrentScreen].OnEntry();
-    }
-    
-    public void CreateLocalPlayer(Mark mark)
-    {
-        LocalPlayer = new Player(mark);
-    }
 }

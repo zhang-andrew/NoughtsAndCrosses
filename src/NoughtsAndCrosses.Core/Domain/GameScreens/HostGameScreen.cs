@@ -7,17 +7,17 @@ namespace NoughtsAndCrosses.Core.Domain.GameScreens;
 public class HostGameScreen : IScreen
 {
     private ConsoleService _consoleService = new ConsoleService();
-    private GameManager _gameManager;
+    private AppManager _appManager;
 
-    public HostGameScreen(GameManager gameManager)
+    public HostGameScreen(AppManager appManager)
     {
-        _gameManager = gameManager;
+        _appManager = appManager;
     }
     
     public bool HandleInput(string input)
     {
         // wait for the other player to join from server
-        _consoleService.SystemMessage(GameScreen.HostGame, $"Waiting for the other player to join...");
+        _consoleService.SystemMessage($"Waiting for the other player to join...");
         return true;
     }
     
@@ -42,11 +42,11 @@ public class HostGameScreen : IScreen
         // Generate random code, and send to server
         string randomCode = new Random().Next(1000, 9999).ToString();
         
-        _consoleService.SystemMessage(GameScreen.HostGame, $"Share the following lobby code with your friend to join the game: {randomCode}");
+        _consoleService.SystemMessage($"Share the following lobby code with your friend to join the game: {randomCode}");
     }
 
     public void OnExit()
     {
-        _consoleService.SystemMessage(GameScreen.HostGame, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
+        //
     }
 }

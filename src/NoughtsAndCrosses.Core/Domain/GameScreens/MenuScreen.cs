@@ -6,11 +6,11 @@ namespace NoughtsAndCrosses.Core.Domain.GameScreens;
 public class MenuScreen : IScreen
 {
     private ConsoleService _consoleService = new ConsoleService();
-    private GameManager _gameManager;
+    private AppManager _appManager;
 
-    public MenuScreen(GameManager gameManager)
+    public MenuScreen(AppManager appManager)
     {
-        _gameManager = gameManager;
+        _appManager = appManager;
     }
     
     public bool HandleInput(string input)
@@ -18,15 +18,15 @@ public class MenuScreen : IScreen
         switch (input)
         {
             case MenuCommand.GoToInGame:
-                _gameManager.ChangeScreen(GameScreen.InGame);
+                _appManager.ChangeScreen(GameScreen.InGame);
                 return true;
                 break;
             case MenuCommand.GoToHostGame:
-                _gameManager.ChangeScreen(GameScreen.HostGame);
+                _appManager.ChangeScreen(GameScreen.HostGame);
                 return true;
                 break;
             case MenuCommand.GoToJoinGame:
-                _gameManager.ChangeScreen(GameScreen.JoinGame);
+                _appManager.ChangeScreen(GameScreen.JoinGame);
                 return true;
                 break;
             default:
@@ -36,12 +36,12 @@ public class MenuScreen : IScreen
 
     public void OnEntry()
     {
-        _consoleService.SystemMessage(GameScreen.Menu, "Welcome to Noughts and Crosses.");
-        _consoleService.SystemMessage(GameScreen.Menu, $"Type the number of the option you want to select.\n\t1 - Play Game\n\t2 - Host Game (Online)\n\t3 - Join Game (Online)");
+        _consoleService.SystemMessage("Welcome to Noughts and Crosses.");
+        _consoleService.SystemMessage($"Type the number of the option you want to select.\n\t1 - Play Game\n\t2 - Host Game (Online)\n\t3 - Join Game (Online)");
     }
 
     public void OnExit()
     {
-        _consoleService.SystemMessage(GameScreen.Menu, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
+        //
     }
 }

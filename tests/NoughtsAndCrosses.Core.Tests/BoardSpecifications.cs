@@ -16,7 +16,7 @@ public class BoardSpecifications
     public void Should_have_9_spaces()
     {
         // Arrange      
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         
         // Act
         
@@ -29,7 +29,7 @@ public class BoardSpecifications
     public void Should_display_a_3x3_board()
     {
         // Arrange      
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         
         using (var consoleOutput = new StringWriter()) // We need to capture the output of the console to assert
         {
@@ -55,7 +55,7 @@ public class BoardSpecifications
     public void Should_be_able_to_place_mark_on_space(string fileLetter, int rankNumber, Mark mark)
     {
         // Arrange      
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         
         // Act
         gameManager.Board.PlaceMark(new Coordinate(fileLetter, rankNumber), mark);
@@ -68,7 +68,7 @@ public class BoardSpecifications
     public void Should_throw_exception_when_placing_mark_on_occupied_space()
     {
         // Arrange      
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         
         // Act
         gameManager.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);
@@ -84,7 +84,7 @@ public class BoardSpecifications
     public void Should_win_when_three_marks_are_in_a_row(string[] coordinates)
     {
         // Arrange      
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         
         // Act
         foreach (string coordinate in coordinates)
@@ -100,7 +100,7 @@ public class BoardSpecifications
     public void Should_draw_when_all_spaces_are_occupied_and_no_winner()
     {
         // Arrange      
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         
         // Act
         gameManager.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.X);

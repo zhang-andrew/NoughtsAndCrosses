@@ -15,7 +15,7 @@ public class InputSpecifications
     public void Should_place_a_mark_if_coordinate_input_is_valid(Mark markType, string input)
     {
         // Arrange
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         
         gameManager.ChangeScreen(GameScreen.InGame);
         gameManager.CreateLocalPlayer(markType);
@@ -35,7 +35,7 @@ public class InputSpecifications
     public void Should_throw_exception_if_coordinate_input_is_invalid(Mark markType, string input)
     {
         // Arrange
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         gameManager.ChangeScreen(GameScreen.InGame);
         gameManager.CreateLocalPlayer(markType);
         
@@ -53,7 +53,7 @@ public class InputSpecifications
     public void Should_close_game_when_close_command_is_given()
     {
         // Arrange
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         gameManager.ChangeScreen(GameScreen.Menu); // TODO: should take any screen
         
         // Act
@@ -70,7 +70,7 @@ public class InputSpecifications
     public void Should_go_back_to_menu_when_back_command_is_given(GameScreen gameScreen)
     {
         // Arrange
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         gameManager.ChangeScreen(gameScreen);
         
         // Act
@@ -84,7 +84,7 @@ public class InputSpecifications
     public void Should_change_screens_with_goto_commands_in_menu()
     {
         // Arrange
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         gameManager.ChangeScreen(GameScreen.Menu);
         
         // Act
@@ -100,7 +100,7 @@ public class InputSpecifications
     public void Should_log_invalid_command_if_given()
     {
         // Arrange
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         gameManager.ChangeScreen(GameScreen.Menu);
         
         // Act
@@ -115,7 +115,7 @@ public class InputSpecifications
     public void Should_restart_game_when_restart_command_is_given()
     {
         // Arrange
-        var gameManager = new GameManager();
+        var gameManager = new AppManager();
         gameManager.ChangeScreen(GameScreen.InGame);
         gameManager.Screens[gameManager.CurrentScreen].HandleInput("a1");
         gameManager.Screens[gameManager.CurrentScreen].HandleInput("b1");
