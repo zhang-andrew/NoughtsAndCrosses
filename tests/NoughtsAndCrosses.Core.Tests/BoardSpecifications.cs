@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 // using NoughtsAndCrosses.ConsoleApp;
 // using NoughtsAndCrosses.ConsoleApp.Domain;
 using NoughtsAndCrosses.Core.Constant;
+using NoughtsAndCrosses.Core.Domain.Exceptions;
 
 namespace NoughtsAndCrosses.Core;
 
@@ -74,7 +75,7 @@ public class BoardSpecifications
         Action act = () => gameManager.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.O);
         
         // Assert
-        act.Should().Throw<Exception>().WithMessage("Space is already occupied");
+        act.Should().Throw<SpaceOccupiedException>();
     }
     
     [Theory]
@@ -116,4 +117,19 @@ public class BoardSpecifications
         gameManager.Board.HasWinner().Should().BeFalse();
         gameManager.Board.HasDraw().Should().BeTrue();
     }
+    
+    // [Fact]
+    // public void Should_indicate_that_X_always_start_first()
+    // {
+    //     // Arrange      
+    //     var gameManager = new GameManager();
+    //     
+    //     // Act
+    //     gameManager.Board.StartGame();
+    //     gameManager.LocalPlayer.AssignedMark = Mark.O;
+    //     gameManager.Board.PlaceMark(new Coordinate(FileLetter.A, 1), Mark.O);
+    //     
+    //     // Assert
+    //     gameManager.Board.Spaces.Any(s => s.Coordinate.Value == "a1").Mark.Should().Be(Mark.X);
+    // }
 }

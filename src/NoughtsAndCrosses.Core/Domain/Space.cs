@@ -1,3 +1,4 @@
+using NoughtsAndCrosses.Core.Domain.Exceptions;
 using NoughtsAndCrosses.Core.Enum;
 
 namespace NoughtsAndCrosses.Core.Domain;
@@ -20,7 +21,7 @@ public class Space
         set
         {
             if (_mark != Mark.Empty)
-                throw new Exception("Space is already occupied");
+                throw new SpaceOccupiedException();
             else
             {
                 _mark = value;

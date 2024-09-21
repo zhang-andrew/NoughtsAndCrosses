@@ -54,11 +54,18 @@ public class Board
     
     public void PlaceMarkRandomly(Mark mark)
     {
+        var spacesWithoutMarks = Spaces.Where(s => s.Mark == Mark.Empty).ToArray();
+        
         Random random = new Random();
-        int randomInt = random.Next(0, 9);
-        var randomSpace = Spaces[randomInt];
-        // PlaceMark(randomSpace, mark);
-        randomSpace.Mark = mark;
+        int randomInt = random.Next(0, spacesWithoutMarks.Length);
+        
+        var randomUnmarkedSpace = Spaces.First(s => s.Coordinate.Value == spacesWithoutMarks[randomInt].Coordinate.Value);
+
+        randomUnmarkedSpace.Mark = mark;
+        // Spaces[randomInt].Mark = mark;
+        Console.WriteLine($"Computer placed {mark} on {Spaces[randomInt].Coordinate.Value}");
+        
+        // PlaceMark(randomSpace.Coordinate, mark);
     }
     
     public void PlaceBestMark(Mark mark) // for Computer Player

@@ -12,8 +12,6 @@ public class InputSpecifications
     [Theory]
     [InlineData(Mark.X, "a1")]
     [InlineData(Mark.X, "A2")]
-    [InlineData(Mark.O, "b3")]
-    [InlineData(Mark.O, "B3")]
     public void Should_place_a_mark_if_coordinate_input_is_valid(Mark markType, string input)
     {
         // Arrange

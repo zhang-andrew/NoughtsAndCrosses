@@ -1,4 +1,5 @@
 using NoughtsAndCrosses.Core.Constant;
+using NoughtsAndCrosses.Core.Domain.Exceptions;
 using NoughtsAndCrosses.Core.Enum;
 
 namespace NoughtsAndCrosses.Core.Domain;
@@ -21,7 +22,7 @@ public class Coordinate
     public static Coordinate Parse(string value)
     {
         if (value.Length != 2)
-            throw new Exception("Invalid coordinate");
+            throw new InvalidCoordinateException();
         
         value = value.ToUpper();
         
