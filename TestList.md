@@ -21,11 +21,11 @@
 - [x] Be able to consume Console commands and be connected to a WebSocket server
 - [ ] Receive WebSocket messages and react accordingly
 - 
-- [ ] When a winner is announced, the game should end and the winner should be displayed
+- [x] When a winner is announced, the game should end and the winner should be displayed
 - [ ] When a draw is announced, the game should end and a draw should be displayed
-- [ ] When a player makes a move, the game state should be updated and displayed
+- [x] When a player makes a move, the game state should be updated and displayed
 - [ ] When a player makes a move, the game state should be updated and displayed (Online)
-- [ ] When the game has ended, options to start a new game should be displayed
+- [x] When the game has ended, options to start a new game should be displayed
 - [ ] When the game has ended, all coordinate commands should be disabled
 - [ ] If a rematch is requested, the game should reset and start again
 
