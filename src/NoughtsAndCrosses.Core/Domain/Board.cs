@@ -5,6 +5,8 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class Board
 {
+    public Mark WinnerIs = Mark.Empty;
+    
     public Space[] Spaces { get; } = new Space[9]
     {
         new Space(new Coordinate(FileLetter.A, 3)),
@@ -122,11 +124,13 @@ public class Board
             if (coordinates.All(coordinate => xMarks.Contains(coordinate)))
             {
                 hasWinner = true;
+                WinnerIs = Mark.X;
                 break;
             }
             else if (coordinates.All(s => oMarks.Contains(s)))
             {
                 hasWinner = true;
+                WinnerIs = Mark.O;
                 break;
             }
         }

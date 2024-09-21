@@ -15,6 +15,37 @@ public class InGameScreen : IScreen
     
     public bool HandleInput(string input)
     {
+        if (_gameManager.BoardState.Board.HasWinner() || _gameManager.BoardState.Board.HasDraw())
+        {
+            ShowEndGameMessage();
+            
+            // switch (input)
+            // {
+            //     case "restart":
+            //         _gameManager.ChangeScreen(GameScreen.Menu);
+            //         return true;
+            // }
+            // case input:
+                
+            
+            return true;
+        }
+        
+        Coordinate parsedCoordiante = Coordinate.Parse(input.ToUpper());
+        _gameManager.BoardState.Board.PlaceMark(parsedCoordiante, _gameManager.LocalPlayer.AssignedMark);
+        _gameManager.BoardState.Board.ShowBoard();
+        
+        if (_gameManager.BoardState.Board.HasWinner() || _gameManager.BoardState.Board.HasDraw())
+        {
+            ShowEndGameMessage();
+        }
+        
+        return true;
+    }
+
+    public void OnEntry()
+    {
+        // If local player is not assigned, assign a mark
         if (_gameManager.LocalPlayer == null)
         {
             // Assign mark randomly
@@ -25,25 +56,6 @@ public class InGameScreen : IScreen
             _gameManager.LocalPlayer = new Player(randomMark);
         }
         
-        Coordinate parsedCoordiante = Coordinate.Parse(input.ToUpper());
-        _gameManager.BoardState.Board.PlaceMark(parsedCoordiante, _gameManager.LocalPlayer.AssignedMark);
-        _gameManager.BoardState.Board.ShowBoard();
-        
-        if (_gameManager.BoardState.Board.HasWinner() )
-        {
-            _consoleService.SystemMessage(GameScreen.InGame, "Game over. <insert> wins. Type \"back\" to go back to the menu.");
-        }
-        
-        if (_gameManager.BoardState.Board.HasDraw())
-        {
-            _consoleService.SystemMessage(GameScreen.InGame, "Game over. Type \"back\" to go back to the menu.");
-        }
-
-        return true;
-    }
-
-    public void OnEntry()
-    {
         // If online game, ask server for the board state
         // Else, create a new board state
         _gameManager.BoardState = new BoardState();
@@ -56,5 +68,12 @@ public class InGameScreen : IScreen
     public void OnExit()
     {
         _consoleService.SystemMessage(GameScreen.InGame, $"Exiting \"{_gameManager.CurrentScreen}\" screen.");
+    }
+    
+    private void ShowEndGameMessage()
+    {
+        // Show message based on the game result
+        _consoleService.SystemMessage(GameScreen.InGame, $"Game over. \"{_gameManager.BoardState.Board.WinnerIs}\" wins. Type \"back\" to go back to the menu.");
+        
     }
 }

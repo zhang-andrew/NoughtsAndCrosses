@@ -112,4 +112,26 @@ public class InputSpecifications
         worked.Should().Be(false);
         // _consoleService.SystemMessage(GameScreen.Menu, "Invalid command.").Should().BeTrue();
     }
+    
+    [Fact]
+    public void Should_restart_game_when_restart_command_is_given()
+    {
+        // Arrange
+        var gameManager = new GameManager();
+        gameManager.ChangeScreen(GameScreen.InGame);
+        gameManager.Screens[gameManager.CurrentScreen].HandleInput("a1");
+        gameManager.Screens[gameManager.CurrentScreen].HandleInput("b1");
+        gameManager.Screens[gameManager.CurrentScreen].HandleInput("c1");
+
+        var winner = gameManager.BoardState.Board.WinnerIs;
+        var hasWinner = gameManager.BoardState.Board.HasWinner();
+        
+        // Act
+        gameManager.HandleInput("restart");
+        
+        // Assert
+        gameManager.CurrentScreen.Should().Be(GameScreen.InGame);
+        winner.Should().Be(Mark.Empty);
+        hasWinner.Should().BeFalse();
+    }
 }
