@@ -122,16 +122,16 @@ public class InputSpecifications
         gameManager.Screens[gameManager.CurrentScreen].HandleInput("a1");
         gameManager.Screens[gameManager.CurrentScreen].HandleInput("b1");
         gameManager.Screens[gameManager.CurrentScreen].HandleInput("c1");
-
-        var winner = gameManager.BoardState.Board.WinnerIs;
-        var hasWinner = gameManager.BoardState.Board.HasWinner();
+        
+        gameManager.BoardState.Board.GetWinner().Should().NotBe(Mark.Empty);
+        gameManager.BoardState.Board.HasWinner().Should().BeTrue();
         
         // Act
         gameManager.HandleInput("restart");
         
         // Assert
         gameManager.CurrentScreen.Should().Be(GameScreen.InGame);
-        winner.Should().Be(Mark.Empty);
-        hasWinner.Should().BeFalse();
+        gameManager.BoardState.Board.GetWinner().Should().Be(Mark.Empty);
+        gameManager.BoardState.Board.HasWinner().Should().BeFalse();
     }
 }

@@ -27,4 +27,9 @@ public class Space
             }
         }
     }
+
+    public void Clear()
+    {
+        _mark = Mark.Empty;
+    }
 }

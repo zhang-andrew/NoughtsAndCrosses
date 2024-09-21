@@ -15,19 +15,20 @@ public class InGameScreen : IScreen
     
     public bool HandleInput(string input)
     {
-        if (_gameManager.BoardState.Board.HasWinner() || _gameManager.BoardState.Board.HasDraw())
+        Board board = _gameManager.BoardState.Board;
+        
+        if (board.HasWinner() || board.HasDraw())
         {
-            ShowEndGameMessage();
-            
-            // switch (input)
-            // {
-            //     case "restart":
-            //         _gameManager.ChangeScreen(GameScreen.Menu);
-            //         return true;
-            // }
-            // case input:
-                
-            
+            if (input == "restart")
+            {
+                board.Reset();
+                _gameManager.BoardState.Board.ShowBoard();
+            }
+            else
+            {
+                ShowEndGameMessage();
+            }
+
             return true;
         }
         
@@ -73,7 +74,7 @@ public class InGameScreen : IScreen
     private void ShowEndGameMessage()
     {
         // Show message based on the game result
-        _consoleService.SystemMessage(GameScreen.InGame, $"Game over. \"{_gameManager.BoardState.Board.WinnerIs}\" wins. Type \"back\" to go back to the menu.");
+        _consoleService.SystemMessage(GameScreen.InGame, $"Game over. \"{_gameManager.BoardState.Board.GetWinner()}\" wins.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
         
     }
 }

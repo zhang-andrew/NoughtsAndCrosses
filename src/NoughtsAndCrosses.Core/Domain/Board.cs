@@ -5,7 +5,7 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class Board
 {
-    public Mark WinnerIs = Mark.Empty;
+    private Mark _winnerIs { get; set; } = Mark.Empty;
     
     public Space[] Spaces { get; } = new Space[9]
     {
@@ -86,6 +86,11 @@ public class Board
         return Spaces.First(s => s.Coordinate.Value == parsedCoordinate.Value);
     }
     
+    public Mark GetWinner()
+    {
+        return _winnerIs;
+    }
+    
     public bool HasWinner()
     {
         bool hasWinner = false;
@@ -124,13 +129,13 @@ public class Board
             if (coordinates.All(coordinate => xMarks.Contains(coordinate)))
             {
                 hasWinner = true;
-                WinnerIs = Mark.X;
+                _winnerIs = Mark.X;
                 break;
             }
             else if (coordinates.All(s => oMarks.Contains(s)))
             {
                 hasWinner = true;
-                WinnerIs = Mark.O;
+                _winnerIs = Mark.O;
                 break;
             }
         }
@@ -145,5 +150,15 @@ public class Board
         bool fullBoard = Spaces.All(s => s.Mark != Mark.Empty);
 
         return fullBoard;
+    }
+
+    public void Reset()
+    {
+        foreach (var space in Spaces)
+        {
+            space.Clear();
+        };
+        
+        _winnerIs = Mark.Empty;
     }
 }
