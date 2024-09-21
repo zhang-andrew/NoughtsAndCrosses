@@ -15,14 +15,14 @@ public class InGameScreen : IScreen
     
     public bool HandleInput(string input)
     {
-        Board board = _gameManager.BoardState.Board;
+        Board board = _gameManager.Board;
         
         if (board.HasWinner() || board.HasDraw())
         {
             if (input == "restart")
             {
                 board.Reset();
-                _gameManager.BoardState.Board.ShowBoard();
+                _gameManager.Board.ShowBoard();
             }
             else
             {
@@ -33,10 +33,10 @@ public class InGameScreen : IScreen
         }
         
         Coordinate parsedCoordiante = Coordinate.Parse(input.ToUpper());
-        _gameManager.BoardState.Board.PlaceMark(parsedCoordiante, _gameManager.LocalPlayer.AssignedMark);
-        _gameManager.BoardState.Board.ShowBoard();
+        _gameManager.Board.PlaceMark(parsedCoordiante, _gameManager.LocalPlayer.AssignedMark);
+        _gameManager.Board.ShowBoard();
         
-        if (_gameManager.BoardState.Board.HasWinner() || _gameManager.BoardState.Board.HasDraw())
+        if (_gameManager.Board.HasWinner() || _gameManager.Board.HasDraw())
         {
             ShowEndGameMessage();
         }
@@ -59,11 +59,11 @@ public class InGameScreen : IScreen
         
         // If online game, ask server for the board state
         // Else, create a new board state
-        _gameManager.BoardState = new BoardState();
+        _gameManager.Board = new Board();
         
         _consoleService.SystemMessage(GameScreen.InGame ,"Type \"back\" to go back to the menu.");
         
-        _gameManager.BoardState.Board.ShowBoard();
+        _gameManager.Board.ShowBoard();
     }
 
     public void OnExit()
@@ -74,7 +74,7 @@ public class InGameScreen : IScreen
     private void ShowEndGameMessage()
     {
         // Show message based on the game result
-        _consoleService.SystemMessage(GameScreen.InGame, $"Game over. \"{_gameManager.BoardState.Board.GetWinner()}\" wins.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
+        _consoleService.SystemMessage(GameScreen.InGame, $"Game over. \"{_gameManager.Board.GetWinner()}\" wins.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
         
     }
 }

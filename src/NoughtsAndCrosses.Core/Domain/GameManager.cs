@@ -13,7 +13,7 @@ public class GameManager
 {
     public GameScreen CurrentScreen { get; private set;}
     public Player? LocalPlayer;
-    public BoardState? BoardState;
+    public Board? Board;
     public bool IsListeningForInputs;
     
     private ConsoleService _consoleService;
@@ -23,7 +23,7 @@ public class GameManager
     {
         _consoleService = new ConsoleService();
         
-        BoardState = new BoardState();
+        Board = new Board();
         
         Screens = new ()
         {

@@ -24,7 +24,7 @@ public class InputSpecifications
         
         // Act
         gameManager.HandleInput(input); // triggers the method that places the mark on the board
-        Space affectedSpace = gameManager.BoardState.Board.GetSpace(input); 
+        Space affectedSpace = gameManager.Board.GetSpace(input); 
         
         // Assert
         affectedSpace.Mark.Should().Be(gameManager.LocalPlayer.AssignedMark);
@@ -123,15 +123,15 @@ public class InputSpecifications
         gameManager.Screens[gameManager.CurrentScreen].HandleInput("b1");
         gameManager.Screens[gameManager.CurrentScreen].HandleInput("c1");
         
-        gameManager.BoardState.Board.GetWinner().Should().NotBe(Mark.Empty);
-        gameManager.BoardState.Board.HasWinner().Should().BeTrue();
+        gameManager.Board.GetWinner().Should().NotBe(Mark.Empty);
+        gameManager.Board.HasWinner().Should().BeTrue();
         
         // Act
         gameManager.HandleInput("restart");
         
         // Assert
         gameManager.CurrentScreen.Should().Be(GameScreen.InGame);
-        gameManager.BoardState.Board.GetWinner().Should().Be(Mark.Empty);
-        gameManager.BoardState.Board.HasWinner().Should().BeFalse();
+        gameManager.Board.GetWinner().Should().Be(Mark.Empty);
+        gameManager.Board.HasWinner().Should().BeFalse();
     }
 }
