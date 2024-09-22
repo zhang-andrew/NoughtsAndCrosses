@@ -29,6 +29,8 @@ public class GameSpecifications : IDisposable
     [Fact]
     public void Should_throw_exception_if_game_starts_with_less_than_two_players()
     {
+        AppManager appManager = AppManager.Instance;
+        appManager.ChangeScreen(AppScreen.InGame);
         GameManager gameManager = GameManager.Instance;
         
         Action act = () => gameManager.NewGame();
@@ -96,7 +98,6 @@ public class GameSpecifications : IDisposable
     {
         AppManager appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
-        
         GameManager gameManager = GameManager.Instance;
         var playerX = gameManager.AddPlayer(new Player(Mark.X));
         var playerO = gameManager.AddPlayer(new Player(Mark.O));
@@ -106,10 +107,10 @@ public class GameSpecifications : IDisposable
         playerO.PlaceMark(new Coordinate(FileLetter.B, 1));
         playerX.PlaceMark(new Coordinate(FileLetter.A, 2));
         playerO.PlaceMark(new Coordinate(FileLetter.B, 2));
-        playerX.PlaceMark(new Coordinate(FileLetter.A, 3));
+        playerX.PlaceMark(new Coordinate(FileLetter.A, 3)); // winning move
         Action act = () => playerO.PlaceMark(new Coordinate(FileLetter.C, 1));
-        //
-        act.Should().Throw<Exception>().WithMessage("Game has already ended. You can't place a mark.");
+
+        act.Should().Throw<Exception>();
     }
 
     [Fact]

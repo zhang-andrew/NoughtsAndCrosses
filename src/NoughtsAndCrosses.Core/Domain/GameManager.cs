@@ -35,7 +35,7 @@ public class GameManager
         // _players must have at least 2 players
         if (Players.Count < 2)
         {
-            throw new InvalidOperationException($"There must be at least 2 players to start a game. {Players.Count}");
+            throw new InvalidOperationException($"There must be at least 2 players to start a game.");
         }
         
         // Setup
