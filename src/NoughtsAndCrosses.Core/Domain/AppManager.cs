@@ -11,6 +11,13 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class AppManager
 {
+    // Singleton implementation ()
+    private static readonly AppManager _instance = new AppManager();
+    public static AppManager Instance
+    {
+        get { return _instance; }
+    }
+    
     public AppScreen CurrentScreen { get; private set;}
     public GameManager GameManager = GameManager.Instance;
 
@@ -19,7 +26,7 @@ public class AppManager
     private ConsoleService _consoleService;
     public Dictionary<AppScreen, IScreen> Screens;
     
-    public AppManager()
+    private AppManager()
     {
         _consoleService = new ConsoleService();
         

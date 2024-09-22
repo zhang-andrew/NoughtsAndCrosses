@@ -21,15 +21,10 @@ public class InGameScreen : IScreen
     public bool HandleInput(string input)
     {
         Coordinate parsedCoordinate = Coordinate.Parse(input.ToUpper());
-        _gameManager.Board.PlaceMark(parsedCoordinate, _gameManager.ClientPlayer.AssignedMark);
+        _gameManager.ClientPlayer.PlaceMark(parsedCoordinate);
         
-        if (_gameManager.Board.HasWinner() || _gameManager.Board.HasDraw())
-        {
-            _appManager.ChangeScreen(AppScreen.PostGame);
-            return true;
-        }
+        // if _gameManager.Game.CheckGameResult()
         
-        _gameManager.Board.ShowBoard();
         return true;
     }
 
@@ -37,7 +32,7 @@ public class InGameScreen : IScreen
     {
         // IF - Confirm there's two players first
         
-        _gameManager.StartGame();
+        // _gameManager.NewGame();
     }
     
     public void OnExit()

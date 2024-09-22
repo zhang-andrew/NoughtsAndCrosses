@@ -33,6 +33,7 @@ public class PreGameScreen : IScreen
                 _consoleService.SystemMessage("Invalid input. Please try again.");
                 return false;
         }
+        
         _gameManager.AddPlayer(_gameManager.ClientPlayer);
 
         if (_gameManager.OfflineMode)
@@ -44,7 +45,10 @@ public class PreGameScreen : IScreen
             _gameManager.AddPlayer(opponentPlayer);
         }
 
+        // Start the game
         _appManager.ChangeScreen(AppScreen.InGame);
+        _gameManager.NewGame();
+        
         return true;
     }
 

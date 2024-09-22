@@ -2,7 +2,7 @@
 
 using NoughtsAndCrosses.Core.Domain;
 
-var gm = new AppManager();
+var gm = AppManager.Instance;
 
 AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
 {

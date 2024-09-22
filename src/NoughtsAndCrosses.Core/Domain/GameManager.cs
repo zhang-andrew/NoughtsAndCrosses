@@ -13,8 +13,8 @@ public class GameManager
         get { return _instance; }
     }
     
-    public Board Board;
-    private List<Player> _players = new() { };
+    public Game? Game { get; private set; }
+    public List<Player> Players { get; private set; } = new() { };
     public Player? ClientPlayer = null; // The player that is playing on the local machine
     public Player? TurnPlayer = null;
     public bool OfflineMode = true;
@@ -24,28 +24,53 @@ public class GameManager
     {
     }
 
-    public void AddPlayer(Player player)
+    public Player AddPlayer(Player player)
     {
-        _players.Add(player);
+        Players.Add(player);
+        return player;
     }
 
-    public void StartGame(Mark? clientAssignedMark = null)
+    public void NewGame()
     {
         // _players must have at least 2 players
-        if (_players.Count < 2)
+        if (Players.Count < 2)
         {
-            throw new InvalidOperationException("There must be at least 2 players to start a game.");
+            throw new InvalidOperationException($"There must be at least 2 players to start a game. {Players.Count}");
         }
         
-        Board = new Board();
+        // Setup
+        Game = new Game();
+        Players.ForEach(p => p.NotifyPlayerMark());
+        TurnPlayer = Players.First(p => p.AssignedMark == Mark.X); // Assign the X player to go first
         
-        // Assign the X player to go first
-        TurnPlayer = _players.First(p => p.AssignedMark == Mark.X); // X always goes first
+        HandleTurn();
+    }
+    
+    public void NextTurn()
+    {
+        TurnPlayer = TurnPlayer == Players[0] ? Players[1] : Players[0];
+        HandleTurn();
+    }
 
-        // Notify all players
-        foreach (var player in _players)
+    /// <summary>Notifies all players to move or wait, if player is computer and it's their turn, it will make them move immediately.</summary>
+    private void HandleTurn()
+    {
+        if (Game.CheckGameResult() != GameResult.InProgress)
         {
-            player.NotifyPlayerMark();
+            // End game
+            Game.ShowBoard();
+            AppManager.Instance.ChangeScreen(AppScreen.PostGame);
+            return;
+        }
+        
+        // Notify all players
+        foreach (var player in Players)
+        {
+            if (player == ClientPlayer)
+            {
+                Game.ShowBoard();
+            }
+            
             if (player == TurnPlayer)
             {
                 player.NotifyTurn();
@@ -55,8 +80,6 @@ public class GameManager
                 player.NotifyWait();
             }
         }
-        
-        Board.ShowBoard();
     }
 
     public void HostGame()
@@ -68,32 +91,16 @@ public class GameManager
         ClientPlayer.NotifyPlayerMark();
     }
 
-    public void NextTurn()
-    {
-        TurnPlayer = TurnPlayer == _players[0] ? _players[1] : _players[0];
-    }
 
-    public void HandleTurn()
+    public void ResetGame()
     {
-        // Broadcast messages
-        foreach (var player in _players)
-        {
-            if (player == ClientPlayer)
-            {
-                player.IsTheirTurn = true;
-                player.NotifyTurn();
-            }
-            else
-            {
-                player.IsTheirTurn = false;
-                player.NotifyWait();
-            }
-        }
-    }
-
-    public void Reset()
-    {
+        Game = null;
         
+        this.Players.Clear();
+        
+        this.ClientPlayer = null;
+        
+        this.TurnPlayer = null;
     }
 
 
