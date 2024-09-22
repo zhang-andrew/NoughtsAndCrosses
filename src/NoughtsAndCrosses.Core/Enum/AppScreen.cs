@@ -1,9 +1,11 @@
 namespace NoughtsAndCrosses.Core.Enum;
 
-public enum GameScreen
+public enum AppScreen
 {
     Menu,
+    PreGame,
     InGame,
+    PostGame,
     HostGame,
     JoinGame
 }

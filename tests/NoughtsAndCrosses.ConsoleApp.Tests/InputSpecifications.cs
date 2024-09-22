@@ -15,17 +15,17 @@ public class InputSpecifications
     public void Should_place_a_mark_if_coordinate_input_is_valid(Mark markType, string input)
     {
         // Arrange
-        var gameManager = new AppManager();
+        var appManager = new AppManager();
+        appManager.ChangeScreen(AppScreen.InGame);
         
-        gameManager.ChangeScreen(GameScreen.InGame);
-        gameManager.CreateLocalPlayer(markType);
+        
         
         // Act
-        gameManager.HandleInput(input); // triggers the method that places the mark on the board
-        Space affectedSpace = gameManager.Board.GetSpace(input); 
+        appManager.HandleInput(input); // triggers the method that places the mark on the board
+        Space affectedSpace = appManager.GameManager.Board.GetSpace(input); 
         
         // Assert
-        affectedSpace.Mark.Should().Be(gameManager.LocalPlayer.AssignedMark);
+        affectedSpace.Mark.Should().Be(appManager.GameManager.ClientPlayer.AssignedMark);
     }
     
     [Theory]
@@ -35,12 +35,14 @@ public class InputSpecifications
     public void Should_throw_exception_if_coordinate_input_is_invalid(Mark markType, string input)
     {
         // Arrange
-        var gameManager = new AppManager();
-        gameManager.ChangeScreen(GameScreen.InGame);
-        gameManager.CreateLocalPlayer(markType);
+        var appManager = new AppManager();
+        appManager.ChangeScreen(AppScreen.InGame);
+        
+        var gameManager = new GameManager();
+        gameManager.StartGame(markType);
         
         // Act
-        Action act = () => gameManager.HandleInput(input);
+        Action act = () => appManager.HandleInput(input);
         
         // Assert
         // act.Should().Throw<Exception>().WithMessage("Invalid coordinate");
@@ -54,7 +56,7 @@ public class InputSpecifications
     {
         // Arrange
         var gameManager = new AppManager();
-        gameManager.ChangeScreen(GameScreen.Menu); // TODO: should take any screen
+        gameManager.ChangeScreen(AppScreen.Menu); // TODO: should take any screen
         
         // Act
         gameManager.HandleInput(GeneralCommand.CloseApplication);
@@ -65,19 +67,19 @@ public class InputSpecifications
     }
     
     [Theory]
-    [InlineData(GameScreen.InGame)]
-    [InlineData(GameScreen.HostGame)]
-    public void Should_go_back_to_menu_when_back_command_is_given(GameScreen gameScreen)
+    [InlineData(AppScreen.InGame)]
+    [InlineData(AppScreen.HostGame)]
+    public void Should_go_back_to_menu_when_back_command_is_given(AppScreen appScreen)
     {
         // Arrange
         var gameManager = new AppManager();
-        gameManager.ChangeScreen(gameScreen);
+        gameManager.ChangeScreen(appScreen);
         
         // Act
         gameManager.HandleInput(GeneralCommand.Back);
         
         // Assert
-        gameManager.CurrentScreen.Should().Be(GameScreen.Menu);
+        gameManager.CurrentScreen.Should().Be(AppScreen.Menu);
     }
     
     [Fact]
@@ -85,7 +87,7 @@ public class InputSpecifications
     {
         // Arrange
         var gameManager = new AppManager();
-        gameManager.ChangeScreen(GameScreen.Menu);
+        gameManager.ChangeScreen(AppScreen.Menu);
         
         // Act
         gameManager.HandleInput(MenuCommand.GoToHostGame);
@@ -93,7 +95,7 @@ public class InputSpecifications
         // gameManager.HandleInput("3");
         
         // Assert
-        gameManager.CurrentScreen.Should().Be(GameScreen.HostGame);
+        gameManager.CurrentScreen.Should().Be(AppScreen.HostGame);
     }
 
     [Fact]
@@ -101,7 +103,7 @@ public class InputSpecifications
     {
         // Arrange
         var gameManager = new AppManager();
-        gameManager.ChangeScreen(GameScreen.Menu);
+        gameManager.ChangeScreen(AppScreen.Menu);
         
         // Act
         bool worked = gameManager.Screens[gameManager.CurrentScreen].HandleInput("ASDF");
@@ -115,20 +117,22 @@ public class InputSpecifications
     public void Should_restart_game_when_restart_command_is_given()
     {
         // Arrange
-        var gameManager = new AppManager();
-        gameManager.ChangeScreen(GameScreen.InGame);
-        gameManager.Screens[gameManager.CurrentScreen].HandleInput("a1");
-        gameManager.Screens[gameManager.CurrentScreen].HandleInput("b1");
-        gameManager.Screens[gameManager.CurrentScreen].HandleInput("c1");
+        var gameManager = new GameManager();
+        var appManager = new AppManager();
+        
+        appManager.ChangeScreen(AppScreen.InGame);
+        appManager.Screens[appManager.CurrentScreen].HandleInput("a1");
+        appManager.Screens[appManager.CurrentScreen].HandleInput("b1");
+        appManager.Screens[appManager.CurrentScreen].HandleInput("c1");
         
         gameManager.Board.GetWinner().Should().NotBe(Mark.Empty);
         gameManager.Board.HasWinner().Should().BeTrue();
         
         // Act
-        gameManager.HandleInput("restart");
+        appManager.HandleInput("restart");
         
         // Assert
-        gameManager.CurrentScreen.Should().Be(GameScreen.InGame);
+        appManager.CurrentScreen.Should().Be(AppScreen.InGame);
         gameManager.Board.GetWinner().Should().Be(Mark.Empty);
         gameManager.Board.HasWinner().Should().BeFalse();
     }

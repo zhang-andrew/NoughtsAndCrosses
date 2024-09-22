@@ -1,44 +1,62 @@
 using NoughtsAndCrosses.Core.Domain.GameScreens;
 using NoughtsAndCrosses.Core.Enum;
+using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Domain;
 
 public class GameManager
 {
+    // Singleton implementation ()
+    private static readonly GameManager _instance = new GameManager();
+    public static GameManager Instance
+    {
+        get { return _instance; }
+    }
+    
     public Board Board;
     private List<Player> _players = new() { };
-    public Player ClientPlayer; // The player that is playing on the local machine
-    public Player TurnPlayer;
-    
-    public GameManager()
+    public Player? ClientPlayer = null; // The player that is playing on the local machine
+    public Player? TurnPlayer = null;
+    public bool OfflineMode = true;
+    private ConsoleService _consoleService = new ConsoleService();
+
+    private GameManager() // private ctor is optional but enforces the developer to not create new instance. Use the public Instance property instead.
     {
+    }
+
+    public void AddPlayer(Player player)
+    {
+        _players.Add(player);
     }
 
     public void StartGame(Mark? clientAssignedMark = null)
     {
-        Board = new Board();
-        
-        // First handle the client player
-        if (System.Enum.TryParse(clientAssignedMark.ToString(), out Mark mark))
+        // _players must have at least 2 players
+        if (_players.Count < 2)
         {
-            ClientPlayer = new Player(mark);
-        } else
-        {
-            Random random = new Random();
-            ClientPlayer = new Player(random.Next(0, 2) == 0 ? Mark.X : Mark.O);
+            throw new InvalidOperationException("There must be at least 2 players to start a game.");
         }
-        _players.Add(ClientPlayer);
         
-        // Then handle the other player
-        Mark opponentMark = ClientPlayer.AssignedMark == Mark.X ? Mark.O : Mark.X;
-        Player opponentPlayer = new Player(opponentMark);
-        _players.Add(opponentPlayer);
+        Board = new Board();
         
         // Assign the X player to go first
         TurnPlayer = _players.First(p => p.AssignedMark == Mark.X); // X always goes first
 
-        // Notify the client player of their mark
-        ClientPlayer.NotifyPlayerMark();
+        // Notify all players
+        foreach (var player in _players)
+        {
+            player.NotifyPlayerMark();
+            if (player == TurnPlayer)
+            {
+                player.NotifyTurn();
+            }
+            else
+            {
+                player.NotifyWait();
+            }
+        }
+        
+        Board.ShowBoard();
     }
 
     public void HostGame()
@@ -72,5 +90,11 @@ public class GameManager
             }
         }
     }
+
+    public void Reset()
+    {
+        
+    }
+
 
 }

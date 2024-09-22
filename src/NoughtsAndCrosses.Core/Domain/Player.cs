@@ -5,12 +5,12 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class Player
 {
-    public Mark AssignedMark;
-    public bool IsTheirTurn;
-    private bool IsComputer = false;
+    public Mark AssignedMark { get; }
+    public bool IsComputer = false;
+    public Guid Id { get; } = Guid.NewGuid();
     
     private ConsoleService _consoleService;
-    public Guid Id { get; } = Guid.NewGuid();
+    private GameManager _gameManager = GameManager.Instance;
 
     public Player(Mark assignedMark, bool isComputer = false)
     {
@@ -21,23 +21,34 @@ public class Player
     
     public void NotifyPlayerMark()
     {
-        _consoleService.SystemMessage($"You are playing as {AssignedMark}");
+        if (_gameManager.ClientPlayer == this)
+        {
+            _consoleService.SystemMessage($"You are playing as {AssignedMark}");
+        }
     }
     
     public void NotifyTurn()
     {
         if (IsComputer)
         {
-            // Make a move
+            // Wait and delay 2 seconds
+            // Task.Delay(2000).Wait();
+            // Console.WriteLine("hi");
+            // Console.WriteLine(_gameManager.Board.Spaces);
+            _gameManager.Board.PlaceMarkRandomly(AssignedMark);
+            // _gameManager.Board.ShowBoard();
         } else
         {
-            _consoleService.SystemMessage("It's your turn!");
+            _consoleService.SystemMessage("It's your turn! (Type the coordinate to place a mark.)");
         }
     }
 
     public void NotifyWait()
     {
-        _consoleService.SystemMessage("Waiting for other player to make a move...");
+        if (_gameManager.ClientPlayer == this)
+        {
+            _consoleService.SystemMessage("Waiting for opponent to move.");
+        }
     }
 
     public void NotifyWin()

@@ -17,16 +17,16 @@ public class MenuScreen : IScreen
     {
         switch (input)
         {
-            case MenuCommand.GoToInGame:
-                _appManager.ChangeScreen(GameScreen.InGame);
+            case MenuCommand.GoToPreGame:
+                _appManager.ChangeScreen(AppScreen.PreGame);
                 return true;
                 break;
             case MenuCommand.GoToHostGame:
-                _appManager.ChangeScreen(GameScreen.HostGame);
+                _appManager.ChangeScreen(AppScreen.HostGame);
                 return true;
                 break;
             case MenuCommand.GoToJoinGame:
-                _appManager.ChangeScreen(GameScreen.JoinGame);
+                _appManager.ChangeScreen(AppScreen.JoinGame);
                 return true;
                 break;
             default:

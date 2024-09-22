@@ -17,7 +17,8 @@ public class HostGameScreen : IScreen
     public bool HandleInput(string input)
     {
         // wait for the other player to join from server
-        _consoleService.SystemMessage($"Waiting for the other player to join...");
+        _consoleService.SystemMessage($"Waiting for opponent to join.");
+        
         return true;
     }
     

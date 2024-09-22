@@ -11,12 +11,13 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class AppManager
 {
-    public GameScreen CurrentScreen { get; private set;}
+    public AppScreen CurrentScreen { get; private set;}
+    public GameManager GameManager = GameManager.Instance;
 
     public bool IsListeningForInputs;
     
     private ConsoleService _consoleService;
-    public Dictionary<GameScreen, IScreen> Screens;
+    public Dictionary<AppScreen, IScreen> Screens;
     
     public AppManager()
     {
@@ -24,16 +25,18 @@ public class AppManager
         
         Screens = new ()
         {
-            { GameScreen.Menu, new MenuScreen(this) },
-            { GameScreen.HostGame, new HostGameScreen(this) },
-            { GameScreen.JoinGame, new JoinGameScreen(this) },
-            { GameScreen.InGame, new InGameScreen(this) },
+            { AppScreen.Menu, new MenuScreen(this) },
+            { AppScreen.HostGame, new HostGameScreen(this) },
+            { AppScreen.JoinGame, new JoinGameScreen(this) },
+            { AppScreen.InGame, new InGameScreen(this) },
+            { AppScreen.PreGame, new PreGameScreen(this) },
+            { AppScreen.PostGame, new PostGameScreen(this) }
         };
     }
 
     public async void Run()
     {
-        CurrentScreen = GameScreen.Menu;
+        CurrentScreen = AppScreen.Menu;
         Screens[CurrentScreen].OnEntry();
         await ListenForInputs();
     }
@@ -73,11 +76,11 @@ public class AppManager
         }
         
         // Handle back command
-        if (CurrentScreen != GameScreen.Menu)
+        if (CurrentScreen != AppScreen.Menu)
         {
             if (input == GeneralCommand.Back)
             {
-                ChangeScreen(GameScreen.Menu);
+                ChangeScreen(AppScreen.Menu);
                 return;
             }
         }
@@ -90,7 +93,7 @@ public class AppManager
             _consoleService.SystemMessage( "Invalid command.");
     }
     
-    public void ChangeScreen(GameScreen newMode)
+    public void ChangeScreen(AppScreen newMode)
     {
         Screens[CurrentScreen].OnExit();
         _consoleService.SystemMessage($"Exited \"{CurrentScreen}\" screen.");        

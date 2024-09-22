@@ -24,7 +24,6 @@ public class Board
     {
         for (int i = 0; i < Spaces.Length; i++)
         {
-            
             if (i % 3 == 0)
             {
                 string rankAsString = ((int)Spaces[i].Coordinate.Rank).ToString();
