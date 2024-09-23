@@ -8,13 +8,24 @@ namespace NoughtsAndCrosses.ConsoleApp.Tests;
 
 public class GameSpecifications : IDisposable
 {
+    private readonly Player _playerX;
+    private readonly Player _playerO;
+    
+    public GameSpecifications() // runs before each test
+    {
+        // Prepare the game to be InGame screen
+        AppManager appManager = AppManager.Instance;
+        appManager.ChangeScreen(AppScreen.InGame);
+        
+        // Create two players
+        _playerX = new Player(Mark.X);
+        _playerO = new Player(Mark.O);
+    }
+    
     public void Dispose()
     {
         GameManager gameManager = GameManager.Instance;
         gameManager.ResetGame();
-        
-        AppManager appManager = AppManager.Instance;
-        appManager.ChangeScreen(AppScreen.Menu);
     }
     
     [Fact]
@@ -30,8 +41,6 @@ public class GameSpecifications : IDisposable
     [Fact]
     public void Should_throw_exception_if_game_starts_with_less_than_two_players()
     {
-        AppManager appManager = AppManager.Instance;
-        appManager.ChangeScreen(AppScreen.InGame);
         GameManager gameManager = GameManager.Instance;
         
         Action act = () => gameManager.NewGame();
@@ -43,9 +52,9 @@ public class GameSpecifications : IDisposable
     public void Should_start_game_if_game_has_two_players()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(new Player(Mark.X));
-        gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = gameManager.Players.First();
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
         gameManager.Game.Should().NotBeNull();
@@ -55,9 +64,9 @@ public class GameSpecifications : IDisposable
     public void Should_assign_X_player_with_first_turn()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(new Player(Mark.X));
-        gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = gameManager.Players.First();
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         
         gameManager.NewGame();
         
@@ -67,38 +76,34 @@ public class GameSpecifications : IDisposable
     [Fact]
     public void Should_switch_turns_after_every_move()
     {
-        AppManager appManager = AppManager.Instance;
-        appManager.ChangeScreen(AppScreen.InGame);
         GameManager gameManager = GameManager.Instance;
-        var playerX = gameManager.AddPlayer(new Player(Mark.X));
-        var playerO = gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = playerX;
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
-        playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
         
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
         gameManager.TurnPlayer.AssignedMark.Should().Be(Mark.O);
         
-        playerO.PlaceMark(new Coordinate(FileLetter.A, 2));
+        _playerO.PlaceMark(new Coordinate(FileLetter.A, 2));
         gameManager.TurnPlayer.AssignedMark.Should().Be(Mark.X);
     }
 
     [Fact]
     public void Should_throw_exception_if_player_moves_when_game_has_ended()
     {
-        AppManager appManager = AppManager.Instance;
-        appManager.ChangeScreen(AppScreen.InGame);
-        GameManager gameManager = GameManager.Instance;
-        var playerX = gameManager.AddPlayer(new Player(Mark.X));
-        var playerO = gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = playerX;
+        var gameManager = GameManager.Instance;
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
-        playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
-        playerO.PlaceMark(new Coordinate(FileLetter.B, 1));
-        playerX.PlaceMark(new Coordinate(FileLetter.A, 2));
-        playerO.PlaceMark(new Coordinate(FileLetter.B, 2));
-        playerX.PlaceMark(new Coordinate(FileLetter.A, 3)); // winning move
-        Action act = () => playerO.PlaceMark(new Coordinate(FileLetter.C, 1));
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
+        _playerO.PlaceMark(new Coordinate(FileLetter.B, 1));
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 2));
+        _playerO.PlaceMark(new Coordinate(FileLetter.B, 2));
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 3)); // winning move
+        Action act = () => _playerO.PlaceMark(new Coordinate(FileLetter.C, 1));
 
         act.Should().Throw<Exception>();
     }
@@ -110,12 +115,10 @@ public class GameSpecifications : IDisposable
     public void Should_win_when_three_marks_are_in_a_row(string[] xCoordinates, string[] oCoordinates)
     {
         // Arrange
-        var appManager = AppManager.Instance;
-        appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var playerX = gameManager.AddPlayer(new Player(Mark.X));
-        var playerO = gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = playerX;
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
         // Act
@@ -123,9 +126,9 @@ public class GameSpecifications : IDisposable
         {
             var xCoordinate = xCoordinates[i];
             var oCoordinate = oCoordinates[i];
-            playerX.PlaceMark(Coordinate.Parse(xCoordinate));
+            _playerX.PlaceMark(Coordinate.Parse(xCoordinate));
             if (i == xCoordinates.Length - 1) break; // ignore the last iteration for "O" since X has won.
-            playerO.PlaceMark(Coordinate.Parse(oCoordinate));
+            _playerO.PlaceMark(Coordinate.Parse(oCoordinate));
         }
         
         // Assert
@@ -136,9 +139,9 @@ public class GameSpecifications : IDisposable
     public void Should_reset_game_when_restarting()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(new Player(Mark.X));
-        gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = gameManager.Players.First();
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
 
         gameManager.ResetGame();
@@ -161,9 +164,9 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var playerX = gameManager.AddPlayer(new Player(Mark.X));
-        var playerO = gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = playerX;
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
         appManager.HandleInput(input); // triggers the method that places the mark on the board
@@ -188,9 +191,9 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var playerX = gameManager.AddPlayer(new Player(Mark.X));
-        var playerO = gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = playerX;
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
         Action act = () => appManager.HandleInput(input);
@@ -241,9 +244,9 @@ public class GameSpecifications : IDisposable
     public void Should_display_a_3x3_board()
     {
         var gameManager = GameManager.Instance;
-        var playerX = gameManager.AddPlayer(new Player(Mark.X));
-        var playerO = gameManager.AddPlayer(new Player(Mark.O));
-        gameManager.ClientPlayer = playerX;
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
         using (var consoleOutput = new StringWriter()) // We need to capture the output of the console to assert
@@ -269,8 +272,8 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var xPlayer = gameManager.AddPlayer(new Player(Mark.X));
-        var oPlayer = gameManager.AddPlayer(new Player(Mark.O));
+        var xPlayer = gameManager.AddPlayer(_playerX);
+        var oPlayer = gameManager.AddPlayer(_playerO);
         gameManager.ClientPlayer = xPlayer;
         gameManager.NewGame();
         
@@ -293,8 +296,8 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var xPlayer = gameManager.AddPlayer(new Player(Mark.X));
-        var oPlayer = gameManager.AddPlayer(new Player(Mark.O));
+        var xPlayer = gameManager.AddPlayer(_playerX);
+        var oPlayer = gameManager.AddPlayer(_playerO);
         gameManager.ClientPlayer = xPlayer;
         gameManager.NewGame();
         
@@ -320,8 +323,8 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var xPlayer = gameManager.AddPlayer(new Player(Mark.X));
-        var oPlayer = gameManager.AddPlayer(new Player(Mark.O));
+        var xPlayer = gameManager.AddPlayer(_playerX);
+        var oPlayer = gameManager.AddPlayer(_playerO);
         gameManager.ClientPlayer = xPlayer;
         gameManager.NewGame();
         
