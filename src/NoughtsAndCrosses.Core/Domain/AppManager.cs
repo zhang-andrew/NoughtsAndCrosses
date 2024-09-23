@@ -84,7 +84,9 @@ public class AppManager
         }
         
         // Handle back command
-        if (CurrentScreen != AppScreen.Menu)
+        if (CurrentScreen != AppScreen.Menu 
+            || CurrentScreen != AppScreen.InGame 
+            || CurrentScreen != AppScreen.PostGame)
         {
             if (input == GeneralCommand.Back)
             {
