@@ -20,12 +20,18 @@ public class InGameScreen : IScreen
     
     public bool HandleInput(string input)
     {
-        Coordinate parsedCoordinate = Coordinate.Parse(input.ToUpper());
-        _gameManager.ClientPlayer.PlaceMark(parsedCoordinate);
-        
-        // if _gameManager.Game.CheckGameResult()
-        
-        return true;
+        try
+        {
+            Coordinate parsedCoordinate = Coordinate.Parse(input.ToUpper());
+            _gameManager.ClientPlayer.PlaceMark(parsedCoordinate);
+            return true;
+        }
+        catch (InvalidCoordinateException e)
+        {
+            // Console.WriteLine(e.Message);
+            _consoleService.HandledExceptionMessage(e, "Please enter a valid coordinate.");
+            return false;
+        }
     }
 
     public void OnEntry()

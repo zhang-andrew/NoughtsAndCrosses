@@ -14,7 +14,7 @@ public class PlayerClient
         _consoleService = consoleService;
     }
 
-    public async Task ConnectToWebSocket(string uri) // e.g. "ws://localhost:5000/ws" or "wss://localhost:5001/ws"
+    public async Task<bool> ConnectToWebSocket(string uri) // e.g. "ws://localhost:5000/ws" or "wss://localhost:5001/ws"
     {
         try
         {
@@ -23,10 +23,13 @@ public class PlayerClient
             Console.WriteLine("Connected!");
 
             await SendToWebSocket("helllllllllllo");
+
+            return true;
         }
         catch (WebSocketException e)
         {
             _consoleService.HandledExceptionMessage(e, "Ensure the server is running and the URI is correct.");
+            return false;
         } 
         catch (Exception e)
         {

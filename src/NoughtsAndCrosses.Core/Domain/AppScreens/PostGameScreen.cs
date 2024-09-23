@@ -38,7 +38,7 @@ public class PostGameScreen : IScreen
         {
             _consoleService.SystemMessage( $"Draw.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
         } 
-        else
+        else if (_gameManager.Game.GetGameResult() == GameResult.SomeoneWon)
         {
             if (_gameManager.ClientPlayer == _gameManager.Game.Winner)
             {
@@ -48,6 +48,10 @@ public class PostGameScreen : IScreen
             {
                 _consoleService.SystemMessage( $"You LOST with the \"{_gameManager.Game.Winner.AssignedMark}\" markers.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
             }
+        }
+        else
+        {
+            // pass
         }
     }
 

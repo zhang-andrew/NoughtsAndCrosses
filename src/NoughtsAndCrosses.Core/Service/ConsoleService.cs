@@ -11,14 +11,8 @@ public class ConsoleService
         Console.WriteLine($"[System] {message}");
     }
     
-    /* Unhandled exception messages */
-    public void UnhandledExceptionMessage(Exception e)
-    {
-        Console.WriteLine($"[Exception] {e}");
-    }
-    
     /* Handled/Known exception messages */
-    public void HandledExceptionMessage(Exception e, string solutionMessage)
+    public void HandledExceptionMessage(Exception e, string solutionMessage = "")
     {
         Console.WriteLine($"[Error] {e.Message}. {solutionMessage}");
     }

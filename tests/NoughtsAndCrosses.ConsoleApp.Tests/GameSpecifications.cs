@@ -169,7 +169,7 @@ public class GameSpecifications : IDisposable
         gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
-        appManager.HandleInput(input); // triggers the method that places the mark on the board
+        appManager.WriteInput(input); // triggers the method that places the mark on the board
         Space affectedSpace = appManager.GameManager.Game.GetSpace(input); 
         
         affectedSpace.Mark.Should().Be(appManager.GameManager.ClientPlayer.AssignedMark);
@@ -199,7 +199,7 @@ public class GameSpecifications : IDisposable
 
     [Theory]
     [InlineData(Mark.X, "aa")]
-    [InlineData(Mark.X, "HelloWorld")]
+    [InlineData(Mark.X, "%%")]
     [InlineData(Mark.X, "11")]
     public void Should_throw_exception_if_invalid_coordinate_input(Mark markType, string input)
     {
@@ -211,7 +211,7 @@ public class GameSpecifications : IDisposable
         gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
-        Action act = () => appManager.HandleInput(input);
+        Action act = () => appManager.WriteInput(input);
         
         act.Should().Throw<Exception>();
     }
@@ -223,7 +223,7 @@ public class GameSpecifications : IDisposable
         var gameManager = AppManager.Instance;
         gameManager.ChangeScreen(AppScreen.Menu); // TODO: should take any screen
         
-        gameManager.HandleInput(GeneralCommand.CloseApplication);
+        gameManager.WriteInput(GeneralCommand.CloseApplication);
         
         gameManager.IsListeningForInputs.Should().BeFalse();
     }
@@ -236,22 +236,45 @@ public class GameSpecifications : IDisposable
         var gameManager = AppManager.Instance;
         gameManager.ChangeScreen(appScreen);
         
-        gameManager.HandleInput(GeneralCommand.Back);
+        gameManager.WriteInput(GeneralCommand.Back);
         
         gameManager.CurrentScreen.Should().Be(AppScreen.Menu);
     }
     
-    [Fact]
-    public void Should_log_invalid_command_if_given()
+    [Theory]
+    [InlineData(AppScreen.Menu)]
+    [InlineData(AppScreen.HostGame)]
+    [InlineData(AppScreen.JoinGame)]
+    [InlineData(AppScreen.PreGame)]
+    [InlineData(AppScreen.InGame)]
+    [InlineData(AppScreen.PostGame)]
+    public void Should_log_invalid_inputs(AppScreen screen)
     {
-        var gameManager = AppManager.Instance;
-        gameManager.ChangeScreen(AppScreen.Menu);
+        // Arrange
+        if (screen == AppScreen.InGame || screen == AppScreen.PostGame)
+        {
+            var gameManager = GameManager.Instance;
+            gameManager.AddPlayer(_playerX);
+            gameManager.AddPlayer(_playerO);
+            gameManager.ClientPlayer = _playerX;
+            gameManager.NewGame();
+        }
         
-        bool worked = gameManager.Screens[gameManager.CurrentScreen].HandleInput("ASDF");
+        var appManager = AppManager.Instance;
+        appManager.ChangeScreen(screen);
         
-        throw new NotImplementedException();
-        // worked.Should().Be(false);
-        // _consoleService.SystemMessage(GameScreen.Menu, "Invalid command.").Should().BeTrue();
+        var consoleOutput = new StringWriter(); // Capture Console.WriteLine output
+        Console.SetOut(consoleOutput);
+    
+        // Act
+        appManager.WriteInput("ASDF");
+
+        // Assert
+        consoleOutput.ToString().Should().Contain("Invalid input");
+        
+        
+        // Cleanup - Reset the console output
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
     }
     
     

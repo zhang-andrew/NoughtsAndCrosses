@@ -38,3 +38,8 @@
  
 
 - [ ] Decouple consoleApp input commands from Core GameManager logic
+
+
+# Todos
+- [ ] Exit command should prompt user to confirm exit.
+- [ ] Back command should only be available in HostGameScreen and JoinGameScreen.
