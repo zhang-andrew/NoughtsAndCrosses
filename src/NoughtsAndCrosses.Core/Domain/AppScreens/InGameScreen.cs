@@ -28,8 +28,12 @@ public class InGameScreen : IScreen
         }
         catch (InvalidCoordinateException e)
         {
-            // Console.WriteLine(e.Message);
             _consoleService.HandledExceptionMessage(e, "Please enter a valid coordinate.");
+            return false;
+        }
+        catch (SpaceOccupiedException e)
+        {
+            _consoleService.HandledExceptionMessage(e, "Enter a coordinate that is empty.");
             return false;
         }
     }

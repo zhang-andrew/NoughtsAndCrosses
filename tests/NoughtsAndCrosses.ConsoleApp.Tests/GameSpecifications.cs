@@ -317,7 +317,7 @@ public class GameSpecifications : IDisposable
     }
     
     [Fact]
-    public void Should_throw_exception_if_player_marks_an_occupied_space()
+    public void Should_log_invalid_player_mark_on_occupied_space()
     {
         // Arrange      
         var appManager = AppManager.Instance;
@@ -325,20 +325,23 @@ public class GameSpecifications : IDisposable
         var gameManager = GameManager.Instance;
         var xPlayer = gameManager.AddPlayer(_playerX);
         var oPlayer = gameManager.AddPlayer(_playerO);
-        gameManager.ClientPlayer = xPlayer;
+        gameManager.ClientPlayer = oPlayer;
         gameManager.NewGame();
         
+        var consoleOutput = new StringWriter(); // Capture Console.WriteLine output
+        Console.SetOut(consoleOutput);
+        
         // Act
-        Action act = () =>
-        {
-            xPlayer.PlaceMark(new Coordinate(FileLetter.A, 1));
-            oPlayer.PlaceMark(new Coordinate(FileLetter.A, 1));
-        };
-
+        xPlayer.PlaceMark(new Coordinate(FileLetter.A, 1));
+        // oPlayer.PlaceMark(new Coordinate(FileLetter.A, 1)); // this action will throw the exception, because we directly called the method
+        appManager.WriteInput("a1"); // this will catch the exception, handle it by logging "Invalid input".
+        
         // Assert
-        act.Should().Throw<SpaceOccupiedException>();
+        consoleOutput.ToString().Should().Contain("Invalid input");
+        
+        // Cleanup - Reset the console output
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
     }
-    
     
     [Fact]
     public void Should_draw_when_all_spaces_are_occupied_and_no_winner()

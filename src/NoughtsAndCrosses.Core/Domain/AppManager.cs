@@ -96,11 +96,11 @@ public class AppManager
         }
         
         // Handle screen-specific commands
-        bool wasHandled = Screens[CurrentScreen].HandleInput(input);
-        
-        // Handle invalid command
-        if (!wasHandled)
+        bool inputResult = Screens[CurrentScreen].HandleInput(input);
+        if (!inputResult)
+        {
             _consoleService.SystemMessage( "Invalid input.");
+        }
     }
     
     public void ChangeScreen(AppScreen newMode)

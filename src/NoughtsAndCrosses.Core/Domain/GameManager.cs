@@ -65,7 +65,7 @@ public class GameManager
         }
         if (_clientPlayer == null)
         {
-            throw new InvalidOperationException($"ClientPlayer must be assigned before starting a game.");
+            throw new NullReferenceException($"ClientPlayer must be assigned before starting a game.");
         }
         
         // Setup
