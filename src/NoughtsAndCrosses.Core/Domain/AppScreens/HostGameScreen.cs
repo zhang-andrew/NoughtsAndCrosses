@@ -19,7 +19,7 @@ public class HostGameScreen : IScreen
         // wait for the other player to join from server
         _consoleService.SystemMessage($"Waiting for opponent to join.");
         
-        return true;
+        return false;
     }
     
     public void OnEntry()
@@ -31,19 +31,24 @@ public class HostGameScreen : IScreen
         {
             try
             {
-                await playerClient.ConnectToWebSocket(serverUri);
+                bool connected = await playerClient.ConnectToWebSocket(serverUri);
+                
+                if (connected)
+                {
+                    // Generate random code, and send to server
+                    string randomCode = new Random().Next(1000, 9999).ToString();
+                    _consoleService.SystemMessage($"Share the following lobby code with your friend to join the game: {randomCode}");
+                } else {
+                    _consoleService.SystemMessage("Failed to connect to server. Type \"back\" to return to the menu.");
+                    // _appManager.ChangeScreen(AppScreen.Menu);
+                }
             }
             catch (Exception e)
             {
-                _consoleService.UnhandledExceptionMessage(e);
-                // throw; // we don't want to throw because we want to keep the app running
+                Console.WriteLine("Unhandled exception occurred. Exiting...");
+                throw; // Rethrow the exception
             }
         });
-        
-        // Generate random code, and send to server
-        string randomCode = new Random().Next(1000, 9999).ToString();
-        
-        _consoleService.SystemMessage($"Share the following lobby code with your friend to join the game: {randomCode}");
     }
 
     public void OnExit()

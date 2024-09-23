@@ -24,7 +24,7 @@ public class JoinGameScreen : IScreen
 
     public void OnEntry()
     {
-        _consoleService.SystemMessage( "Enter the \"Lobby Code\" to join game");
+        _consoleService.SystemMessage( "\n\tEnter the \"Lobby Code\" to join game. \n\tType \"back\" to return to the menu.");
     }
 
     public void OnExit()

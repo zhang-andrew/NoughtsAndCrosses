@@ -30,7 +30,6 @@ public class PreGameScreen : IScreen
                 _gameManager.ClientPlayer = new Player(random.Next(0, 2) == 0 ? Mark.X : Mark.O);
                 break;
             default:
-                _consoleService.SystemMessage("Invalid input. Please try again.");
                 return false;
         }
         

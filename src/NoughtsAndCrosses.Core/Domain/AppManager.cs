@@ -58,7 +58,7 @@ public class AppManager
             {
                 string? input = Console.ReadLine();
                 
-                HandleInput(input);
+                WriteInput(input);
                 
                 if (IsListeningForInputs == false)
                 {
@@ -67,12 +67,13 @@ public class AppManager
             }
             catch (Exception e)
             {
-                _consoleService.UnhandledExceptionMessage(e);
+                Console.WriteLine("Unhandled exception occurred. Exiting...");
+                throw; // Rethrow the exception
             }
         }
     }
 
-    public void HandleInput(string input)
+    public void WriteInput(string input)
     {
         // Handle close command
         if (input == GeneralCommand.CloseApplication)
@@ -97,7 +98,7 @@ public class AppManager
         
         // Handle invalid command
         if (!wasHandled)
-            _consoleService.SystemMessage( "Invalid command.");
+            _consoleService.SystemMessage( "Invalid input.");
     }
     
     public void ChangeScreen(AppScreen newMode)
