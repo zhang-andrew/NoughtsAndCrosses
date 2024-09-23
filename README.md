@@ -18,7 +18,7 @@ $ dotnet run --project src/NoughtsAndCrosses.ConsoleApp
 ```
 A build is available in the releases section of this repository.
 
-## Solution structure
+## Folder structure
 ```
 PROJECT_ROOT
 │   # Project files
@@ -41,3 +41,4 @@ PROJECT_ROOT
 
 # TODO
 1. Create a mock for the WebSocketServer
+2. Clear the console screen for the clientPlayer after making their move
