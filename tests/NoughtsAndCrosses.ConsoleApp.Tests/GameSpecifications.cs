@@ -159,6 +159,8 @@ public class GameSpecifications : IDisposable
     [Theory]
     [InlineData(Mark.X, "a1")]
     [InlineData(Mark.X, "A2")]
+    [InlineData(Mark.X, "1a")]
+    [InlineData(Mark.X, "1A")]
     public void Should_place_mark_if_valid_coordinate_input(Mark markType, string input)
     {
         var appManager = AppManager.Instance;
