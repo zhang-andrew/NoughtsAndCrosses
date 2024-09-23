@@ -26,19 +26,27 @@ public class Coordinate
         
         value = value.ToUpper();
         
-        string[] validFileLetters = new string[3] {FileLetter.A, FileLetter.B, FileLetter.C};
-        int[] validRankNumbers = new int[3] {1, 2, 3};
-
+        int? rankNumber = Int32.TryParse(value[1].ToString(), out int parsedSecondChar) ? parsedSecondChar : null;
         string fileLetter = value[0].ToString();
-        int rankNumber = Int32.Parse(value[1].ToString());
+
+        // TODO: improve this 
+        // If the above Int32.TryParse fails for the 2nd char, it will return null, so we try to parse the 1st char: 
+        if (rankNumber == null)
+        {
+            rankNumber = Int32.TryParse(value[0].ToString(), out int parsedFirstChar) ? parsedFirstChar : null;
+            fileLetter = value[1].ToString();
+        }
+
+        string[] validFileLetters = new string[3] {FileLetter.A, FileLetter.B, FileLetter.C};
+        int?[] validRankNumbers = new int?[3] {1, 2, 3};
         
         if (!validFileLetters.Contains(fileLetter))
-            throw new Exception("Invalid coordinate (fileLetter)");
+            throw new InvalidCoordinateException();
         
         if (!validRankNumbers.Contains(rankNumber))
-            throw new Exception("Invalid coordinate (rankNumber)");
+            throw new InvalidCoordinateException();
         
         // Get the FileLetter and RankNumber from the string
-        return new Coordinate(fileLetter, rankNumber);
+        return new Coordinate(fileLetter, (int)rankNumber);
     }
 }

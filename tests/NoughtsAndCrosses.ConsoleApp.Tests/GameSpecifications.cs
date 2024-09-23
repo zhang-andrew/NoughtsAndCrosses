@@ -201,7 +201,7 @@ public class GameSpecifications : IDisposable
     [InlineData(Mark.X, "aa")]
     [InlineData(Mark.X, "%%")]
     [InlineData(Mark.X, "11")]
-    public void Should_throw_exception_if_invalid_coordinate_input(Mark markType, string input)
+    public void Should_log_invalid_coordinate_input(Mark markType, string input)
     {
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
@@ -211,34 +211,18 @@ public class GameSpecifications : IDisposable
         gameManager.ClientPlayer = _playerX;
         gameManager.NewGame();
         
-        Action act = () => appManager.WriteInput(input);
+        var consoleOutput = new StringWriter(); // Capture Console.WriteLine output
+        Console.SetOut(consoleOutput);
         
-        act.Should().Throw<Exception>();
-    }
-    
- 
-    [Fact]
-    public void Should_exit_game_with_exit_input()
-    {
-        var gameManager = AppManager.Instance;
-        gameManager.ChangeScreen(AppScreen.Menu); // TODO: should take any screen
+        // Act
+        appManager.WriteInput(input);
         
-        gameManager.WriteInput(GeneralCommand.CloseApplication);
+        // Assert
+        consoleOutput.ToString().Should().Contain("Invalid input");
+        // act.Should().Throw<InvalidCoordinateException>();
         
-        gameManager.IsListeningForInputs.Should().BeFalse();
-    }
-    
-    [Theory]
-    [InlineData(AppScreen.InGame)]
-    [InlineData(AppScreen.HostGame)]
-    public void Should_navigate_to_menu_with_back_input(AppScreen appScreen)
-    {
-        var gameManager = AppManager.Instance;
-        gameManager.ChangeScreen(appScreen);
-        
-        gameManager.WriteInput(GeneralCommand.Back);
-        
-        gameManager.CurrentScreen.Should().Be(AppScreen.Menu);
+        // Cleanup - Reset the console output
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
     }
     
     [Theory]
@@ -268,7 +252,9 @@ public class GameSpecifications : IDisposable
     
         // Act
         appManager.WriteInput("ASDF");
-
+        appManager.WriteInput("AA");
+        appManager.WriteInput("11");
+        
         // Assert
         consoleOutput.ToString().Should().Contain("Invalid input");
         
@@ -276,6 +262,31 @@ public class GameSpecifications : IDisposable
         // Cleanup - Reset the console output
         Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
     }
+ 
+    [Fact]
+    public void Should_exit_game_with_exit_input()
+    {
+        var gameManager = AppManager.Instance;
+        gameManager.ChangeScreen(AppScreen.Menu); // TODO: should take any screen
+        
+        gameManager.WriteInput(GeneralCommand.CloseApplication);
+        
+        gameManager.IsListeningForInputs.Should().BeFalse();
+    }
+    
+    [Theory]
+    [InlineData(AppScreen.InGame)]
+    [InlineData(AppScreen.HostGame)]
+    public void Should_navigate_to_menu_with_back_input(AppScreen appScreen)
+    {
+        var gameManager = AppManager.Instance;
+        gameManager.ChangeScreen(appScreen);
+        
+        gameManager.WriteInput(GeneralCommand.Back);
+        
+        gameManager.CurrentScreen.Should().Be(AppScreen.Menu);
+    }
+    
     
     
     [Fact]
