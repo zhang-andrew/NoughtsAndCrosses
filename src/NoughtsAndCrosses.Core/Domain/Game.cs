@@ -53,7 +53,7 @@ public class Game
         return Spaces.First(s => s.Coordinate.Value == parsedCoordinate.Value);
     }
     
-    public GameResult CheckGameResult()
+    public GameResult GetGameResult()
     {
         List<string[]> winningCombinations = new()
         {

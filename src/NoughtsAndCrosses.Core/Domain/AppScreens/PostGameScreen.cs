@@ -34,7 +34,7 @@ public class PostGameScreen : IScreen
 
     public void OnEntry()
     {
-        if (_gameManager.Game.CheckGameResult() == GameResult.Draw)
+        if (_gameManager.Game.GetGameResult() == GameResult.Draw)
         {
             _consoleService.SystemMessage( $"Draw.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
         } 

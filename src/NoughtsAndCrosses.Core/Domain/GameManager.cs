@@ -13,15 +13,41 @@ public class GameManager
         get { return _instance; }
     }
     
-    public Game? Game { get; private set; }
     public List<Player> Players { get; private set; } = new() { };
-    public Player? ClientPlayer = null; // The player that is playing on the local machine
-    public Player? TurnPlayer = null;
+    public Player? TurnPlayer { get; private set; }
     public bool OfflineMode = true;
     private ConsoleService _consoleService = new ConsoleService();
+    private Player? _clientPlayer { get; set; } // The player that is playing on the local machine
+    private Game? _game { get; set; }
 
     private GameManager() // private ctor is optional but enforces the developer to not create new instance. Use the public Instance property instead.
     {
+    }
+    
+    public Player? ClientPlayer
+    {
+        get
+        {
+            if (_clientPlayer == null)
+            {
+                throw new NullReferenceException("GameManager.ClientPlayer is null, assign it manually or normally assigned in PreGameScreen.");
+            }
+            return _clientPlayer;
+        }
+        set => _clientPlayer = value;
+    } 
+    
+    public Game? Game
+    {
+        get
+        {
+            if (_game == null)
+            {
+                throw new NullReferenceException("GameManager.Game is null, use NewGame() method to start one.");
+            }
+            return _game;
+        }
+        private set => _game = value;
     }
 
     public Player AddPlayer(Player player)
@@ -37,25 +63,28 @@ public class GameManager
         {
             throw new InvalidOperationException($"There must be at least 2 players to start a game.");
         }
+        if (_clientPlayer == null)
+        {
+            throw new InvalidOperationException($"ClientPlayer must be assigned before starting a game.");
+        }
         
         // Setup
         Game = new Game();
         Players.ForEach(p => p.NotifyPlayerMark());
         TurnPlayer = Players.First(p => p.AssignedMark == Mark.X); // Assign the X player to go first
         
-        HandleTurn();
+        CheckWinConditionAndNotifyPlayers();
     }
     
     public void NextTurn()
     {
         TurnPlayer = TurnPlayer == Players[0] ? Players[1] : Players[0];
-        HandleTurn();
     }
 
     /// <summary>Notifies all players to move or wait, if player is computer and it's their turn, it will make them move immediately.</summary>
-    private void HandleTurn()
+    public void CheckWinConditionAndNotifyPlayers()
     {
-        if (Game.CheckGameResult() != GameResult.InProgress)
+        if (Game.GetGameResult() != GameResult.InProgress)
         {
             // End game
             Game.ShowBoard();

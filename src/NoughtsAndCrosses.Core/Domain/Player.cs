@@ -36,6 +36,7 @@ public class Player
         // if (WasWinningMove()) return;
         
         _gameManager.NextTurn();
+        _gameManager.CheckWinConditionAndNotifyPlayers();
     }
     
     private void PlaceMarkRandomly(Mark mark)
@@ -56,6 +57,7 @@ public class Player
         if (WasWinningMove()) return;
         
         _gameManager.NextTurn();
+        _gameManager.CheckWinConditionAndNotifyPlayers();
     }
     
     private void PlaceBestMark(Mark mark) // for Computer Player
@@ -79,7 +81,7 @@ public class Player
     
     private bool WasWinningMove()
     {
-        if (_gameManager.Game.CheckGameResult() != GameResult.InProgress)
+        if (_gameManager.Game.GetGameResult() != GameResult.InProgress)
         {
             // _appManager.ChangeScreen(AppScreen.PostGame);
             return true;
@@ -95,7 +97,7 @@ public class Player
             return new (false, "Invalid screen. You can only place a mark in the game screen.");
         }
         
-        if (_gameManager.Game.CheckGameResult() is GameResult.SomeoneWon or GameResult.Draw)
+        if (_gameManager.Game.GetGameResult() is GameResult.SomeoneWon or GameResult.Draw)
         {
             return new (false, "Game has already ended. You can't place a mark.");
         }
