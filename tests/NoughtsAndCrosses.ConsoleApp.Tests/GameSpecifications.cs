@@ -178,7 +178,22 @@ public class GameSpecifications : IDisposable
     [Fact]
     public void Should_throw_exception_if_player_moves_when_not_their_turn()
     {
-        throw new NotImplementedException();
+        GameManager gameManager = GameManager.Instance;
+        gameManager.AddPlayer(_playerX);
+        gameManager.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
+        gameManager.NewGame();
+
+
+        Action act = () =>
+        {
+            _playerX.PlaceMark(new Coordinate(FileLetter.A, 1)); // X goes first
+            _playerO.PlaceMark(new Coordinate(FileLetter.B, 1)); // 0 next move
+            _playerO.PlaceMark(new Coordinate(FileLetter.B, 2)); // 0 tries to move again
+        };
+
+        // act.Should().Throw<Exception>();
+        act.Should().Throw<Exception>().WithMessage("It's not your turn.");
     }
 
 
