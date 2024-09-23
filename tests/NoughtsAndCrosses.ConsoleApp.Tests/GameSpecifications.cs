@@ -199,7 +199,7 @@ public class GameSpecifications : IDisposable
 
     [Theory]
     [InlineData(Mark.X, "aa")]
-    [InlineData(Mark.X, "HelloWorld")]
+    [InlineData(Mark.X, "%%")]
     [InlineData(Mark.X, "11")]
     public void Should_throw_exception_if_invalid_coordinate_input(Mark markType, string input)
     {
