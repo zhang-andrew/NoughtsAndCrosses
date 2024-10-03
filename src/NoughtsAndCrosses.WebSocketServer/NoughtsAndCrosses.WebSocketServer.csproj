@@ -6,4 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NoughtsAndCrosses.Core\NoughtsAndCrosses.Core.csproj" />
+    </ItemGroup>
+
 </Project>

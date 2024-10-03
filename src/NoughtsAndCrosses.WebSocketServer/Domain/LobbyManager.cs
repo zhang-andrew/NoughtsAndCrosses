@@ -1,10 +1,17 @@
 using NoughtsAndCrosses.Core.Domain;
 
-namespace NoughtsAndCrosses.Core.Service;
+namespace NoughtsAndCrosses.WebSocketServer.Domain;
 
-public class LobbyService
+public class LobbyManager
 {
     public List<Lobby> Lobbies { get; } = new List<Lobby>();
+    
+    public Lobby CreateLobby()
+    {
+        var lobby = new Lobby();
+        Lobbies.Add(lobby);
+        return lobby;
+    }
     
     public Game GetGame(Guid lobbyId)
     {
@@ -23,11 +30,4 @@ public class LobbyService
         // Remove player from waiting list
         
     }
-}
-
-public class Lobby
-{
-    public Guid Id { get; } = Guid.NewGuid();
-    public List<Player> Players { get; } = new List<Player>();
-    public Game Game { get; set; }
 }

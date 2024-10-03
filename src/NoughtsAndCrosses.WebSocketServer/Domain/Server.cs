@@ -35,9 +35,7 @@ public class Server
                 context.Response.StatusCode = 400;
             }
         });
-
-
-
+        
         _app.Run();
     }
     
@@ -49,6 +47,15 @@ public class Server
         while (!result.CloseStatus.HasValue)
         {
             Console.WriteLine($"Received from Client: {Encoding.UTF8.GetString(buffer, 0, result.Count)}");
+            
+            // Convert buffer to json object
+            
+            // Read json objects "type" property and then depending on the type, deserialize the json object to the appropriate object
+            
+            // If type is "game", then deserialize to Game object
+            
+            // If type is "move", then deserialize to Move object
+            
             Console.WriteLine($"Broadcasting to all Clients: {Encoding.UTF8.GetString(buffer, 0, result.Count)}");
             await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
             result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);

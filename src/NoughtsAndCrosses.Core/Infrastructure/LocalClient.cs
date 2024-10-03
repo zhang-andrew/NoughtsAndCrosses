@@ -1,6 +1,8 @@
 using System.Net.WebSockets;
 using System.Text;
+using Newtonsoft.Json;
 using NoughtsAndCrosses.Core.Constant;
+using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Infrastructure;
@@ -50,5 +52,30 @@ public class LocalClient
         var receiveBuffer = new byte[1024];
         var result = await _client.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
         Console.WriteLine($"Received from Server: {Encoding.UTF8.GetString(receiveBuffer, 0, result.Count)}");
+    }
+    
+    public async Task SendGameMoveToWebSocket(string input)
+    {
+        
+        var jsonObject = new { player = "playerX", message = "" };
+        string jsonString = JsonConvert.SerializeObject(jsonObject);
+        
+        
+        var sendBuffer = Encoding.UTF8.GetBytes(input);
+        await _client.SendAsync(new ArraySegment<byte>(sendBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
+    }
+    
+    public async Task<Game> SendGetGameRequestToWebSocket(Guid lobbyId)
+    {
+        // Get lobby from server via websocket request
+
+        throw new NotImplementedException();
+    }
+    
+    public async Task<Guid> SendCreateLobbyRequestToWebSocket()
+    {
+        // Send lobby creation request to server via websocket
+
+        throw new NotImplementedException();
     }
 }
