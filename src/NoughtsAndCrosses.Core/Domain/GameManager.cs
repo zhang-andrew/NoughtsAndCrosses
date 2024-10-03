@@ -13,10 +13,9 @@ public class GameManager
         get { return _instance; }
     }
     
-    public List<Player> Players { get; private set; } = new() { };
-    public Player? TurnPlayer { get; private set; }
-    public bool OfflineMode = true;
     private ConsoleService _consoleService = new ConsoleService();
+    
+    public bool IsOnline = false;
     private Player? _clientPlayer { get; set; } // The player that is playing on the local machine
     private Game? _game { get; set; }
 
@@ -50,16 +49,15 @@ public class GameManager
         private set => _game = value;
     }
 
-    public Player AddPlayer(Player player)
+    public void NewOnlineGame()
     {
-        Players.Add(player);
-        return player;
+        
     }
 
-    public void NewGame()
+    public void NewLocalGame(Player player1, Player player2)
     {
         // _players must have at least 2 players
-        if (Players.Count < 2)
+        if (player1 == null || player2 == null)
         {
             throw new InvalidOperationException($"There must be at least 2 players to start a game.");
         }
@@ -69,17 +67,16 @@ public class GameManager
         }
         
         // Setup
-        Game = new Game();
-        Players.ForEach(p => p.NotifyPlayerMark());
-        TurnPlayer = Players.First(p => p.AssignedMark == Mark.X); // Assign the X player to go first
+        Game = new Game(true);
+        Game.AddPlayer(player1);
+        Game.AddPlayer(player2);
+        Game.Players.ForEach(p => p.NotifyPlayerMark());
+        Game.TurnPlayer = Game.Players.First(p => p.AssignedMark == Mark.X); // Assign the X player to go first
         
         CheckWinConditionAndNotifyPlayers();
     }
     
-    public void NextTurn()
-    {
-        TurnPlayer = TurnPlayer == Players[0] ? Players[1] : Players[0];
-    }
+
 
     /// <summary>Notifies all players to move or wait, if player is computer and it's their turn, it will make them move immediately.</summary>
     public void CheckWinConditionAndNotifyPlayers()
@@ -93,14 +90,14 @@ public class GameManager
         }
         
         // Notify all players
-        foreach (var player in Players)
+        foreach (var player in Game.Players)
         {
             if (player == ClientPlayer)
             {
                 Game.ShowBoard();
             }
             
-            if (player == TurnPlayer)
+            if (player == Game.TurnPlayer)
             {
                 player.NotifyTurn();
             }
@@ -125,11 +122,11 @@ public class GameManager
     {
         Game = null;
         
-        this.Players.Clear();
+        // this.Players.Clear();
         
         this.ClientPlayer = null;
         
-        this.TurnPlayer = null;
+        // this.TurnPlayer = null;
     }
 
 

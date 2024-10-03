@@ -37,6 +37,7 @@ public class HostGameScreen : IScreen
                 
                 if (connected)
                 {
+                    GameManager.Instance.IsOnline = true;
                     // Generate random code, and send to server
                     string randomCode = new Random().Next(1000, 9999).ToString();
                     _consoleService.SystemMessage($"Share the following lobby code with your friend to join the game: {randomCode}");

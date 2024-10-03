@@ -46,7 +46,7 @@ public class PostGameScreen : IScreen
             }
             else
             {
-                _consoleService.SystemMessage( $"You LOST with the \"{_gameManager.Game.Winner.AssignedMark}\" markers.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
+                _consoleService.SystemMessage( $"You LOST, player with \"{_gameManager.Game.Winner.AssignedMark}\" markers won.\n\tType \"back\" to go back to the menu.\n\tType \"restart\" to restart the game.");
             }
         }
         else

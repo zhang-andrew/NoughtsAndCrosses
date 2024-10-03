@@ -32,23 +32,25 @@ public class PreGameScreen : IScreen
             default:
                 return false;
         }
-        
-        _gameManager.AddPlayer(_gameManager.ClientPlayer);
 
-        if (_gameManager.OfflineMode)
+        
+        
+        if (_gameManager.IsOnline == false)
         {
             // Then create Player 2 (Computer)
             Mark opponentMark = _gameManager.ClientPlayer.AssignedMark == Mark.X ? Mark.O : Mark.X;
             Player opponentPlayer = new Player(opponentMark);
             opponentPlayer.IsComputer = true;
-            _gameManager.AddPlayer(opponentPlayer);
+            
+            // Start the game
+            _appManager.ChangeScreen(AppScreen.InGame);
+            _gameManager.NewLocalGame(_gameManager.ClientPlayer, opponentPlayer);
+            
+            return true;
         }
 
-        // Start the game
-        _appManager.ChangeScreen(AppScreen.InGame);
-        _gameManager.NewGame();
-        
-        return true;
+        // return false;
+        throw new NotImplementedException("Online game is not implemented yet.");
     }
 
     public void OnEntry()

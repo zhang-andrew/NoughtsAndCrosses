@@ -35,7 +35,7 @@ public class Player
         
         // if (WasWinningMove()) return;
         
-        _gameManager.NextTurn();
+        _gameManager.Game.NextTurn();
         _gameManager.CheckWinConditionAndNotifyPlayers();
     }
     
@@ -54,9 +54,9 @@ public class Player
         randomUnmarkedSpace.Mark = mark;
         _consoleService.SystemMessage($"Opponent marked \"{randomUnmarkedSpace.Coordinate.Value}\".");
         
-        if (WasWinningMove()) return;
+        // if (WasWinningMove()) return;
         
-        _gameManager.NextTurn();
+        _gameManager.Game.NextTurn();
         _gameManager.CheckWinConditionAndNotifyPlayers();
     }
     
@@ -102,7 +102,7 @@ public class Player
             return new (false, "Game has already ended. You can't place a mark.");
         }
         
-        if (_gameManager.TurnPlayer != this)
+        if (_gameManager.Game.TurnPlayer != this)
         {
             return new (false, "It's not your turn.");
         }

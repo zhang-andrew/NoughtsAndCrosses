@@ -5,7 +5,10 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class Game
 {
-    // public GameResult GameResult { get; private set; } = GameResult.InProgress;
+    public bool Offline { get; set; }
+    public List<Player> Players { get; private set; } = new() { };
+    public Player? TurnPlayer { get; set; }
+    
     public Player Winner { get; private set; }
     
     public Space[] Spaces { get; } = new Space[9]
@@ -20,6 +23,11 @@ public class Game
         new Space(new Coordinate(FileLetter.B, 1)),
         new Space(new Coordinate(FileLetter.C, 1))
     };
+
+    public Game(bool offline)
+    {
+        Offline = offline;
+    }
 
     public void ShowBoard()
     {
@@ -88,13 +96,13 @@ public class Game
             
             if (coordinates.All(coordinate => xMarks.Contains(coordinate)))
             {
-                Winner = GameManager.Instance.Players.First(p => p.AssignedMark == Mark.X);
+                Winner = Players.First(p => p.AssignedMark == Mark.X);
                 return GameResult.SomeoneWon;
                 
             }
             else if (coordinates.All(s => oMarks.Contains(s)))
             {
-                Winner = GameManager.Instance.Players.First(p => p.AssignedMark == Mark.O);
+                Winner = Players.First(p => p.AssignedMark == Mark.O);
                 return GameResult.SomeoneWon;
             }
         }
@@ -116,4 +124,15 @@ public class Game
         return boardIsFull;
     }
 
+    public Player AddPlayer(Player player)
+    {
+        Players.Add(player);
+        return player;
+    }
+    
+    public void NextTurn()
+    {
+        TurnPlayer = TurnPlayer == Players[0] ? Players[1] : Players[0];
+    }
+    
 }

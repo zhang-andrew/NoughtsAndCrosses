@@ -20,7 +20,7 @@ public class AppManager
     
     public AppScreen CurrentScreen { get; private set;}
     public GameManager GameManager = GameManager.Instance;
-
+    
     public bool IsListeningForInputs;
     
     private ConsoleService _consoleService;
@@ -67,7 +67,7 @@ public class AppManager
             }
             catch (Exception e)
             {
-                Console.WriteLine("Unhandled exception occurred. Exiting...");
+                Console.WriteLine($"Unhandled exception occurred. Exiting... {e.Message}");
                 throw; // Rethrow the exception
             }
         }

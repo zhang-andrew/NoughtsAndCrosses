@@ -43,7 +43,7 @@ public class GameSpecifications : IDisposable
     {
         GameManager gameManager = GameManager.Instance;
         
-        Action act = () => gameManager.NewGame();
+        Action act = () => gameManager.NewLocalGame(_playerX, null);
         
         act.Should().Throw<Exception>().WithMessage("There must be at least 2 players to start a game.");
     }
@@ -52,10 +52,10 @@ public class GameSpecifications : IDisposable
     public void Should_start_game_if_game_has_two_players()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        // gameManager.Game.AddPlayer(_playerX);
+        // gameManager.Game.AddPlayer(_playerO);
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         gameManager.Game.Should().NotBeNull();
     }
@@ -64,39 +64,38 @@ public class GameSpecifications : IDisposable
     public void Should_assign_X_player_with_first_turn()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        // gameManager.Game.AddPlayer(_playerX);
+        // gameManager.Game.AddPlayer(_playerO);
         gameManager.ClientPlayer = _playerX;
         
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
-        gameManager.TurnPlayer.AssignedMark.Should().Be(Mark.X);
+        gameManager.Game.TurnPlayer.AssignedMark.Should().Be(Mark.X);
     }
     
     [Fact]
     public void Should_switch_turns_after_every_move()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        // gameManager.Game.AddPlayer(_playerX);
+        // gameManager.Game.AddPlayer(_playerO);
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         _playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
-        gameManager.TurnPlayer.AssignedMark.Should().Be(Mark.O);
+        gameManager.Game.TurnPlayer.AssignedMark.Should().Be(Mark.O);
         
         _playerO.PlaceMark(new Coordinate(FileLetter.A, 2));
-        gameManager.TurnPlayer.AssignedMark.Should().Be(Mark.X);
+        gameManager.Game.TurnPlayer.AssignedMark.Should().Be(Mark.X);
     }
 
     [Fact]
     public void Should_throw_exception_if_player_moves_when_game_has_ended()
     {
         var gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         _playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
         _playerO.PlaceMark(new Coordinate(FileLetter.B, 1));
@@ -116,10 +115,9 @@ public class GameSpecifications : IDisposable
     {
         // Arrange
         var gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         // Act
         for (int i = 0; i < xCoordinates.Length; i++)
@@ -139,10 +137,9 @@ public class GameSpecifications : IDisposable
     public void Should_reset_game_when_restarting()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
 
         gameManager.ResetGame();
         Action getGameAction = () =>
@@ -151,8 +148,6 @@ public class GameSpecifications : IDisposable
             var getClientPlayer = gameManager.ClientPlayer;
         };
 
-        gameManager.Players.Should().BeEmpty(); // Should probably be moved to Game class.
-        gameManager.TurnPlayer.Should().BeNull(); // Should probably be moved to Game class.
         getGameAction.Should().Throw<NullReferenceException>();
     }
     
@@ -166,10 +161,9 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         appManager.WriteInput(input); // triggers the method that places the mark on the board
         Space affectedSpace = appManager.GameManager.Game.GetSpace(input); 
@@ -181,10 +175,9 @@ public class GameSpecifications : IDisposable
     public void Should_throw_exception_if_player_moves_when_not_their_turn()
     {
         GameManager gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
 
 
         Action act = () =>
@@ -208,10 +201,9 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         var consoleOutput = new StringWriter(); // Capture Console.WriteLine output
         Console.SetOut(consoleOutput);
@@ -240,10 +232,8 @@ public class GameSpecifications : IDisposable
         if (screen == AppScreen.InGame || screen == AppScreen.PostGame)
         {
             var gameManager = GameManager.Instance;
-            gameManager.AddPlayer(_playerX);
-            gameManager.AddPlayer(_playerO);
             gameManager.ClientPlayer = _playerX;
-            gameManager.NewGame();
+            gameManager.NewLocalGame(_playerX, _playerO);
         }
         
         var appManager = AppManager.Instance;
@@ -277,7 +267,8 @@ public class GameSpecifications : IDisposable
     }
     
     [Theory]
-    [InlineData(AppScreen.InGame)]
+    [InlineData(AppScreen.JoinGame)]
+    [InlineData(AppScreen.PreGame)]
     [InlineData(AppScreen.HostGame)]
     public void Should_navigate_to_menu_with_back_input(AppScreen appScreen)
     {
@@ -289,16 +280,27 @@ public class GameSpecifications : IDisposable
         gameManager.CurrentScreen.Should().Be(AppScreen.Menu);
     }
     
+    [Theory]
+    [InlineData(AppScreen.InGame)]
+    public void Should_not_navigate_to_menu_with_back_input(AppScreen appScreen)
+    {
+        var gameManager = AppManager.Instance;
+        gameManager.ChangeScreen(appScreen);
+        
+        gameManager.WriteInput(GeneralCommand.Back);
+        
+        gameManager.CurrentScreen.Should().Be(appScreen);
+    }
+    
     
     
     [Fact]
     public void Should_display_a_3x3_board()
     {
         var gameManager = GameManager.Instance;
-        gameManager.AddPlayer(_playerX);
-        gameManager.AddPlayer(_playerO);
+        
         gameManager.ClientPlayer = _playerX;
-        gameManager.NewGame();
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         using (var consoleOutput = new StringWriter()) // We need to capture the output of the console to assert
         {
@@ -323,16 +325,14 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var xPlayer = gameManager.AddPlayer(_playerX);
-        var oPlayer = gameManager.AddPlayer(_playerO);
-        gameManager.ClientPlayer = oPlayer;
-        gameManager.NewGame();
+        gameManager.ClientPlayer = _playerO;
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         var consoleOutput = new StringWriter(); // Capture Console.WriteLine output
         Console.SetOut(consoleOutput);
         
         // Act
-        xPlayer.PlaceMark(new Coordinate(FileLetter.A, 1));
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
         // oPlayer.PlaceMark(new Coordinate(FileLetter.A, 1)); // this action will throw the exception, because we directly called the method
         appManager.WriteInput("a1"); // this will catch the exception, handle it by logging "Invalid input".
         
@@ -350,21 +350,21 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var xPlayer = gameManager.AddPlayer(_playerX);
-        var oPlayer = gameManager.AddPlayer(_playerO);
-        gameManager.ClientPlayer = xPlayer;
-        gameManager.NewGame();
+        // var xPlayer = gameManager.Game.AddPlayer(_playerX);
+        // var oPlayer = gameManager.Game.AddPlayer(_playerO);
+        gameManager.ClientPlayer = _playerX;
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         // Act
-        xPlayer.PlaceMark(new Coordinate(FileLetter.A, 1));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.A, 3));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.A, 2));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.B, 1));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.B, 3));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.B, 2));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.C, 3));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.C, 2));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.C, 1));
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
+        _playerO.PlaceMark(new Coordinate(FileLetter.A, 3));
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 2));
+        _playerO.PlaceMark(new Coordinate(FileLetter.B, 1));
+        _playerX.PlaceMark(new Coordinate(FileLetter.B, 3));
+        _playerO.PlaceMark(new Coordinate(FileLetter.B, 2));
+        _playerX.PlaceMark(new Coordinate(FileLetter.C, 3));
+        _playerO.PlaceMark(new Coordinate(FileLetter.C, 2));
+        _playerX.PlaceMark(new Coordinate(FileLetter.C, 1));
         
         // Assert
         gameManager.Game.GetGameResult().Should().Be(GameResult.Draw);
@@ -377,24 +377,22 @@ public class GameSpecifications : IDisposable
         var appManager = AppManager.Instance;
         appManager.ChangeScreen(AppScreen.InGame);
         var gameManager = GameManager.Instance;
-        var xPlayer = gameManager.AddPlayer(_playerX);
-        var oPlayer = gameManager.AddPlayer(_playerO);
-        gameManager.ClientPlayer = xPlayer;
-        gameManager.NewGame();
+        gameManager.ClientPlayer = _playerX;
+        gameManager.NewLocalGame(_playerX, _playerO);
         
         // Act
-        xPlayer.PlaceMark(new Coordinate(FileLetter.A, 1));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.A, 3));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.A, 2));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.B, 2));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.B, 1));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.C, 3));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.B, 3));
-        oPlayer.PlaceMark(new Coordinate(FileLetter.C, 2));
-        xPlayer.PlaceMark(new Coordinate(FileLetter.C, 1)); // Fills the board and winning move.
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 1));
+        _playerO.PlaceMark(new Coordinate(FileLetter.A, 3));
+        _playerX.PlaceMark(new Coordinate(FileLetter.A, 2));
+        _playerO.PlaceMark(new Coordinate(FileLetter.B, 2));
+        _playerX.PlaceMark(new Coordinate(FileLetter.B, 1));
+        _playerO.PlaceMark(new Coordinate(FileLetter.C, 3));
+        _playerX.PlaceMark(new Coordinate(FileLetter.B, 3));
+        _playerO.PlaceMark(new Coordinate(FileLetter.C, 2));
+        _playerX.PlaceMark(new Coordinate(FileLetter.C, 1)); // Fills the board and winning move.
         
         // Assert
         gameManager.Game.GetGameResult().Should().Be(GameResult.SomeoneWon);
-        gameManager.Game.Winner.Should().Be(xPlayer);
+        gameManager.Game.Winner.Should().Be(_playerX);
     }
 }
