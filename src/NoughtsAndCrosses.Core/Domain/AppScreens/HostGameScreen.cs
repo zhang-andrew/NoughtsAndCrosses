@@ -10,15 +10,28 @@ public class HostGameScreen : IScreen
     private ConsoleService _consoleService = new ConsoleService();
     private AppManager _appManager;
 
+    private bool IsConnected = false;
+    private LocalClient _localClient;
+
     public HostGameScreen(AppManager appManager)
     {
         _appManager = appManager;
+        
+        _localClient = new LocalClient();
     }
     
     public bool HandleInput(string input)
     {
-        // TODO: Wait for OnEntry to finish connecting to server before allowing input
-        
+        if (!IsConnected)
+        {
+            _consoleService.SystemMessage("Connecting to server. Please wait...");
+            return true;
+        }
+        else
+        {
+            _localClient.SendToWebSocket(input);
+        }
+
         // wait for the other player to join from server
         _consoleService.SystemMessage($"Waiting for opponent to join.");
         
@@ -27,18 +40,16 @@ public class HostGameScreen : IScreen
     
     public void OnEntry()
     {
-        string serverUri = "ws://localhost:5148/ws"; 
-        var playerClient = new PlayerClient(_consoleService);
-        
         Task.Run(async () =>
         {
             try
             {
-                bool connected = await playerClient.ConnectToWebSocket(serverUri);
+                bool connected = await _localClient.ConnectToWebSocket();
                 
                 if (connected)
                 {
-                    GameManager.Instance.IsOnline = true;
+                    IsConnected = true;
+                    
                     // Generate random code, and send to server
                     string randomCode = new Random().Next(1000, 9999).ToString();
                     _consoleService.SystemMessage($"Share the following lobby code with your friend to join the game: {randomCode}");

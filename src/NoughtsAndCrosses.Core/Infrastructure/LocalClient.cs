@@ -1,20 +1,21 @@
 using System.Net.WebSockets;
 using System.Text;
+using NoughtsAndCrosses.Core.Constant;
 using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Infrastructure;
 
-public class PlayerClient
+public class LocalClient
 {
     private ClientWebSocket _client = new();
     private ConsoleService _consoleService;
 
-    public PlayerClient(ConsoleService consoleService)
+    public LocalClient()
     {
-        _consoleService = consoleService;
+        _consoleService = new ConsoleService();
     }
 
-    public async Task<bool> ConnectToWebSocket(string uri) // e.g. "ws://localhost:5000/ws" or "wss://localhost:5001/ws"
+    public async Task<bool> ConnectToWebSocket(string uri = Address.WebSocketUri) // e.g. "ws://localhost:5000/ws" or "wss://localhost:5001/ws"
     {
         try
         {
