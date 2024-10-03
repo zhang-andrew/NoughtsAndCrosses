@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using NoughtsAndCrosses.Core.Domain;
+using NoughtsAndCrosses.Core.Manager;
 
 var gm = AppManager.Instance;
 

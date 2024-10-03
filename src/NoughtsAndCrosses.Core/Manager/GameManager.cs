@@ -1,8 +1,9 @@
+using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Domain.GameScreens;
 using NoughtsAndCrosses.Core.Enum;
 using NoughtsAndCrosses.Core.Service;
 
-namespace NoughtsAndCrosses.Core.Domain;
+namespace NoughtsAndCrosses.Core.Manager;
 
 public class GameManager
 {

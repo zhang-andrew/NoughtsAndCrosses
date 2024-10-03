@@ -3,6 +3,7 @@ using NoughtsAndCrosses.Core.Constant;
 using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Domain.Exceptions;
 using NoughtsAndCrosses.Core.Enum;
+using NoughtsAndCrosses.Core.Manager;
 
 namespace NoughtsAndCrosses.ConsoleApp.Tests;
 

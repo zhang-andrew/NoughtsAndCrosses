@@ -5,7 +5,7 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class Game
 {
-    public bool Offline { get; set; }
+    public bool IsOnline { get; set; }
     public List<Player> Players { get; private set; } = new() { };
     public Player? TurnPlayer { get; set; }
     
@@ -24,9 +24,9 @@ public class Game
         new Space(new Coordinate(FileLetter.C, 1))
     };
 
-    public Game(bool offline)
+    public Game(bool isOnline)
     {
-        Offline = offline;
+        IsOnline = isOnline;
     }
 
     public void ShowBoard()
