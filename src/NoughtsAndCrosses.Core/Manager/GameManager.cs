@@ -1,6 +1,8 @@
 using NoughtsAndCrosses.Core.Domain;
 using NoughtsAndCrosses.Core.Domain.GameScreens;
 using NoughtsAndCrosses.Core.Enum;
+using NoughtsAndCrosses.Core.Infrastructure;
+using NoughtsAndCrosses.Core.Infrastructure.Domain;
 using NoughtsAndCrosses.Core.Service;
 
 namespace NoughtsAndCrosses.Core.Manager;
@@ -19,9 +21,12 @@ public class GameManager
     public bool IsOnline = false;
     private Player? _clientPlayer { get; set; } // The player that is playing on the local machine
     private Game? _game { get; set; }
+    public ILocalClient LocalClient { get; private set; }
+    
 
     private GameManager() // private ctor is optional but enforces the developer to not create new instance. Use the public Instance property instead.
     {
+        LocalClient = new LocalClient();
     }
     
     public Player? ClientPlayer
@@ -50,6 +55,8 @@ public class GameManager
         private set => _game = value;
     }
 
+    
+
     public void NewOnlineGame()
     {
         
@@ -68,9 +75,10 @@ public class GameManager
         }
         
         // Setup
-        Game = new Game(true);
-        Game.AddPlayer(player1);
-        Game.AddPlayer(player2);
+        
+        Game = new Game(player1, player2);
+        // Game.AddPlayer(player1);
+        // Game.AddPlayer(player2);
         Game.Players.ForEach(p => p.NotifyPlayerMark());
         Game.TurnPlayer = Game.Players.First(p => p.AssignedMark == Mark.X); // Assign the X player to go first
         
@@ -131,4 +139,27 @@ public class GameManager
     }
 
 
+    public async Task<LobbyBase> CreateLobby(Player hostPlayer, bool isOnline)
+    {
+        if (isOnline)
+        {
+            // Create localClient and connect to server
+            await LocalClient.ConnectToWebSocket();
+            
+            OnlineLobby onlineLobby = new OnlineLobby();
+            onlineLobby.AddPlayer(hostPlayer);
+            return onlineLobby;
+        }
+        else
+        {
+            OfflineLobby offlineLobby = new OfflineLobby();
+            offlineLobby.AddPlayer(hostPlayer);
+            return offlineLobby;
+        }
+    }
+
+    public void UseMockLocalClient()
+    {
+        LocalClient = new LocalClientMock();
+    }
 }

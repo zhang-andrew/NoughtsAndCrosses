@@ -9,8 +9,7 @@ public class HostGameScreen : IScreen
 {
     private ConsoleService _consoleService = new ConsoleService();
     private AppManager _appManager;
-
-    private bool IsConnected = false;
+    
     private LocalClient _localClient;
 
     public HostGameScreen(AppManager appManager)
@@ -22,7 +21,7 @@ public class HostGameScreen : IScreen
     
     public bool HandleInput(string input)
     {
-        if (!IsConnected)
+        if (!_localClient.IsConnected)
         {
             _consoleService.SystemMessage("Connecting to server. Please wait...");
             return true;
@@ -44,12 +43,10 @@ public class HostGameScreen : IScreen
         {
             try
             {
-                bool connected = await _localClient.ConnectToWebSocket();
+                await _localClient.ConnectToWebSocket();
                 
-                if (connected)
+                if (_localClient.IsConnected)
                 {
-                    IsConnected = true;
-                    
                     // Generate random code, and send to server
                     string randomCode = new Random().Next(1000, 9999).ToString();
                     _consoleService.SystemMessage($"Share the following lobby code with your friend to join the game: {randomCode}");

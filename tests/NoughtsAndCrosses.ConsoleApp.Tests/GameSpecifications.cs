@@ -19,8 +19,10 @@ public class GameSpecifications : IDisposable
         appManager.ChangeScreen(AppScreen.InGame);
         
         // Create two players
-        _playerX = new Player(Mark.X);
-        _playerO = new Player(Mark.O);
+        _playerX = new Player();
+        _playerX.AssignMark(Mark.X);
+        _playerO = new Player();
+        _playerO.AssignMark(Mark.O);
     }
     
     public void Dispose()

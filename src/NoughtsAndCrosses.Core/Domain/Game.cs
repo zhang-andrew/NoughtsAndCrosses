@@ -24,9 +24,22 @@ public class Game
         new Space(new Coordinate(FileLetter.C, 1))
     };
 
-    public Game(bool isOnline)
+    public Game(Player playerOne, Player playerTwo)
     {
-        IsOnline = isOnline;
+        List<Player> players = new() { playerOne, playerTwo };
+        
+        if (playerOne.AssignedMark == playerTwo.AssignedMark)
+        {
+            throw new Exception("Players cannot have the same mark.");
+        }
+        if (players.Any(p => p.AssignedMark == Mark.Empty))
+        {
+            throw new Exception("Players must have a mark.");
+        }
+        
+        Players.Add(playerOne);
+        Players.Add(playerTwo);
+        TurnPlayer = players.First(p => p.AssignedMark == Mark.X);
     }
 
     public void ShowBoard()

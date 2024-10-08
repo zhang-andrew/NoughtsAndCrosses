@@ -6,7 +6,7 @@ namespace NoughtsAndCrosses.Core.Domain;
 
 public class Player
 {
-    public Mark AssignedMark { get; }
+    public Mark AssignedMark { get; private set; }
     public bool IsComputer = false;
     public Guid Id { get; } = Guid.NewGuid();
     
@@ -14,13 +14,17 @@ public class Player
     private GameManager _gameManager = GameManager.Instance;
     private AppManager _appManager = AppManager.Instance;
 
-    public Player(Mark assignedMark, bool isComputer = false)
+    public Player(bool isComputer = false)
     {
         IsComputer = isComputer;
-        AssignedMark = assignedMark;
+        // AssignedMark = assignedMark;
         _consoleService = new ConsoleService();
     }
     
+    public void AssignMark(Mark mark)
+    {
+        AssignedMark = mark;
+    }
     
     public void PlaceMark(Coordinate coordinate)
     {

@@ -21,14 +21,17 @@ public class PreGameScreen : IScreen
         switch (input)
         {
             case "1":
-                _gameManager.ClientPlayer = new Player(Mark.X);
+                _gameManager.ClientPlayer = new Player();
+                _gameManager.ClientPlayer.AssignMark(Mark.X);
                 break;
             case "2":
-                _gameManager.ClientPlayer = new Player(Mark.O);
+                _gameManager.ClientPlayer = new Player();
+                _gameManager.ClientPlayer.AssignMark(Mark.O);
                 break;
             case "3":
                 Random random = new Random();
-                _gameManager.ClientPlayer = new Player(random.Next(0, 2) == 0 ? Mark.X : Mark.O);
+                _gameManager.ClientPlayer = new Player();
+                _gameManager.ClientPlayer.AssignMark(random.Next(0, 2) == 0 ? Mark.X : Mark.O);
                 break;
             default:
                 return false;
@@ -40,7 +43,8 @@ public class PreGameScreen : IScreen
         {
             // Then create Player 2 (Computer)
             Mark opponentMark = _gameManager.ClientPlayer.AssignedMark == Mark.X ? Mark.O : Mark.X;
-            Player opponentPlayer = new Player(opponentMark);
+            Player opponentPlayer = new Player();
+            opponentPlayer.AssignMark(opponentMark);
             opponentPlayer.IsComputer = true;
             
             // Start the game
